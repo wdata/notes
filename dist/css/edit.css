@@ -1,0 +1,22 @@
+/*  将输入框的光标设置为#038dff颜色，并保证placeholder颜色为#999   */
+input{
+    color: #038dff;   /*  光标颜色颜色  */
+    text-shadow: 0px 0px 0px #333;   /*  如果删除此属性则文字显示为#fff（字体颜色）  */
+    -webkit-text-fill-color: transparent;
+}
+input::-webkit-input-placeholder{
+    color: #999;   /*  placeholder颜色  */
+    text-shadow: none;
+    -webkit-text-fill-color: initial;
+    line-height: 27px;   /*  在IOS上会有往上移问题，所以设置行高  */
+}
+/*  contenteditable添加placeholder提示   */
+div:empty:before {
+    content: attr(placeholder);
+    display: block; /* For Firefox */
+    color: #999;
+}
+
+/*  给.box的编辑器contenteditable添加placeholder，并设置颜色和大小   */
+.box:empty:before{  content: attr(placeholder);  }
+.box::before{  color:#999;  font-size: 14px;  }

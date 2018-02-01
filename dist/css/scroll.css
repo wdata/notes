@@ -1,0 +1,2 @@
+/*  隐藏滚动条   */
+.element::-webkit-scrollbar {display:none}

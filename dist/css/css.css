@@ -1,0 +1,4 @@
+/*  该属性控制flex容器是单行或者多行，同时横轴的方向决定了新行堆叠的方向。   */
+.box{  flex-wrap:wrap;  }   /*  单行  */
+.box{  flex-wrap:nowrap;  }     /*  多行  */
+.box{  flex-wrap:wrap-reverse;  }     /*  反转 wrap 排列  */
