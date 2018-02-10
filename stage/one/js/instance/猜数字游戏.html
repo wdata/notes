@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+
+    <title>猜数字游戏</title>
+
+    <style>
+        html {
+            font-family: sans-serif;
+        }
+        body {
+            width: 50%;
+            max-width: 800px;
+            min-width: 480px;
+            margin: 0 auto;
+        }
+        .lastResult {
+            color: white;
+            padding: 3px;
+        }
+    </style>
+</head>
+
+<body>
+<h1>猜数字游戏</h1>
+
+<p>我们已经选择了1到100之间的一个随机数。看看你是否可以猜测它在10回合或更少。 我们会告诉你，如果你的猜测太高或太低。</p>
+
+<div class="form">
+    <label for="guessField">输入一个猜测: </label><input type="text" id="guessField" class="guessField">
+    <input type="submit" value="提交猜测" class="guessSubmit">
+</div>
+
+<div class="resultParas">
+    <p class="guesses"></p>
+    <p class="lastResult"></p>
+    <p class="lowOrHi"></p>
+</div>
+
+<script>
+    // 随机数
+    var m = rendom();
+    // 用于记录第几轮
+    var l = []
+        ,lMax = [100]
+        ,lMin = [0];
+
+    // 返回的值
+    var b = {
+        lese: "值太小了！",
+        greater: "值太大了！",
+        equal: "恭喜您，回答正确！",
+        wrong: {
+            text: "错误",
+            color: "red"
+        },
+        correct: {
+            text: "正确",
+            color: "green"
+        },
+        over: "游戏结束！",
+        range: "请选择1到100以内的值！",
+        lowOrHi: "你的猜想已经超出了10次"
+    };
+
+    // DOM addEventListener
+    var guessField = document.querySelector(".guessField");
+    var guessSubmit = document.querySelector(".guessSubmit");
+    var guesses = document.querySelector(".guesses");
+    var lastResult = document.querySelector(".lastResult");
+    var lowOrHi = document.querySelector(".lowOrHi");
+
+    // 解除绑定的按钮
+//    var restart = '<input type="submit" value="重新开始" class="restart">'; createElement
+    var restart = document.createElement("input");
+    restart.type = "submit";
+    restart.classNode = "restart";
+    restart.value = "重新开始";
+
+    guessSubmit.addEventListener("click", submit, false);
+    restart.addEventListener("click",restartEvent , false);
+
+    // 猜想事件
+    function submit(){
+        // 输入的值
+        var d = Math.floor(guessField.value);
+        guessField.value = "";
+
+        // 范围
+        if(d < 1 || d > 100){
+            lastResult.innerText = b.range;
+            lastResult.style.backgroundColor = "red";
+            lowOrHi.innerText = "";
+            return false;
+        }
+
+        // 记录值
+        l.push(d);
+
+        // 10次以内
+        if(l.length > 10){
+            // 结束游戏
+            endGame();
+            return false;
+        }
+
+        // 判断值是大于随机数，还是小于随机数
+        if(d > m){
+            lowOrHi.innerText = b.greater;
+            lastResult.innerText = b.wrong.text;
+            lastResult.style.backgroundColor = b.wrong.color;
+            lMax.push(d);
+
+        }else if( d < m){
+            lowOrHi.innerText = b.lese;
+            lastResult.innerText = b.wrong.text;
+            lastResult.style.backgroundColor = b.wrong.color;
+            lMin.push(d);
+
+        }else if( d === m){
+            lowOrHi.innerText = b.equal;
+            lastResult.innerText = b.correct.text;
+            lastResult.style.backgroundColor = b.correct.color;
+
+            guessField.disabled = "disabled";
+            guessSubmit.disabled = "disabled";
+
+            lowOrHi.appendChild(restart);
+
+        }
+
+        var range = " 范围： " + Math.max.apply(null, lMin) + " - " + Math.min.apply(null, lMax);
+
+        // 显示值
+        guesses.innerText =  "猜测的值： " + l.join(" ") + range;
+    }
+    // 随机数
+    function rendom(){
+        return Math.floor(Math.random() * 100);
+    }
+
+    // 游戏结束
+    function endGame(){
+        guessField.disabled = "disabled";
+        guessSubmit.disabled = "disabled";
+
+        lastResult.style.backgroundColor = b.wrong.color;
+        lastResult.innerText = b.over;
+
+        lowOrHi.appendChild(restart);
+    }
+
+    // 重新开始
+    function restartEvent(){
+        guessField.disabled = "";
+        guessSubmit.disabled = "";
+
+        lastResult.style.backgroundColor = "white";
+        lastResult.innerText = "";
+
+        lowOrHi.removeChild(restart);
+        lowOrHi.innerText = "";
+
+        // 重新清零
+        l = [];
+        lMax = [100];
+        lMin = [0];
+        guesses.innerText = "";
+        // 重新获取随机数
+        m = rendom();
+    }
+
+</script>
+</body>
+</html>
