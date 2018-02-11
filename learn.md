@@ -13,8 +13,8 @@
  
  
  ### JS
- *  Math常用函数
- *  常用取整方法？ parent(), floor()等的区别是什么？
+ *  ~~Math常用函数~~
+ *  ~~常用取整方法？ parent(), floor()等的区别是什么？~~
  *  Document 对象属性和方法
  
  
