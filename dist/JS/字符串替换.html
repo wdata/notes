@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+        //01
+        var str = 'abc345efgabcab';
+
+        str = str.replace(/[a-c]/g,'');
+        //    console.log(str);  //'345efg'
+
+
+
+        //02
+        var str1 = 'abc345efgabcab';
+        // \d 匹配数字
+        // + 匹配至少有一个
+        // * 可以有0个或者多个
+        // ? 匹配有0个或者1个
+        console.log(str1.replace(/(\d)/g,'[$1]'));
+
+
+        //03
+        var str2 = 'abc345efgabcab';
+
+        console.log(str1.replace(/(\d)/g,function(val){
+            // val就表示前面的正则匹配到的数据
+            return val*2;
+        }));
+
+
+
+    </script>
+</body>
+</html>

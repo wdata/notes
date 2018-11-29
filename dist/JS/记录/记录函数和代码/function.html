@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>function记录</title>
+</head>
+<body>
+
+<script>
+
+
+    function approval(data,bur){
+        //用bur判断url
+        var url = bur?'/web/webDutyCtr/updateDutyLeaveStatusById':'/web/webDutyCtr/updateDutyLeaveStatusByIds';
+        $.ajax({
+            type:'post',
+            url: server_url + url + '?userId='+ userId +'',
+            data:JSON.stringify(data),
+            dataType:'json',
+            contentType:'application/json',
+            success:function(data){
+                if(data.code === 200){
+
+                    returnMessage(1,"审批成功！");
+
+                    label(paGe,pageNum);
+                }else{
+                    //无数据提醒框
+                    returnMessage(2,data.message);
+                }
+            },
+            beforeSend:function(xhr){
+                $('.opering-mask').show().find('.con').text('正在处理中，处理结束后该弹窗消失！');
+            },
+            complete:function(){
+                $('.opering-mask').hide();
+            },
+            error:function(data){
+                //报错提醒框
+                returnMessage(2,'报错：' + data.status);
+            }
+        });
+    }
+
+//    需要插件JQ
+    //根据天数循环添加天数和星期  格式：2017-7
+    function cycle(value){
+        var split = value.split("-");  //例子：2017 , 7
+        var dayNumber = getDaysInOneMonth(split[0],split[1]); //获取当月天数；
+        var th = '';
+        $(".dutyDate").remove();
+        for(var x = 1 ; x <= dayNumber; x++){
+            var week = getDayNumber(value + "-" + x);
+            th += '<th class="dutyDate">'+ x +'<b style="display:block;color:#999;">'+ week +'</b></th>';
+        }
+        $(".theadStatus").before(th);
+    }
+    //获取当月天数
+    function getDaysInOneMonth(year,month){
+        month = parseInt(month, 10);
+        var d= new Date(year, month, 0);
+        return d.getDate();
+    }
+    //获取某天的星期
+    function getDayNumber(sum){
+        var d = (new Date(sum)).getDay();
+        var week = '';
+        switch (d){
+            case 0:week = "日";
+                break;
+            case 1:week = "一";
+                break;
+            case 2:week = "二";
+                break;
+            case 3:week = "三";
+                break;
+            case 4:week = "四";
+                break;
+            case 5:week = "五";
+                break;
+            case 6:week = "六";
+                break;
+            default:week = "空";
+                break;
+        }
+        return week;
+    }
+</script>
+</body>
+</html>

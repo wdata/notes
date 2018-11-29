@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+        // var arr = [32,8,1,0];
+        //
+        // arr.sort(function(a,b){
+        //     return a-b;
+        // });
+        //
+        // console.log(arr);
+
+
+        var arr = [
+            {
+                "name": "dfdf",
+                "age": 99
+            },{
+                "name": "eee",
+                "age": 34
+            },{
+                "name": "eeaa",
+                "age": 2
+            },{
+                "name": "qqq",
+                "age": 77
+            }
+        ];
+
+        function Sort(arr){
+            arr.sort(function(a,b){
+                return a.age -b.age
+            });
+
+            return arr;
+        }
+
+
+        console.log(Sort(arr));
+
+    </script>
+</body>
+</html>

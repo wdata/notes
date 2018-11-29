@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+        var arr = [45,2,3,11,4,5,3,4,2,1,0];
+            // 当i = 0的时候
+            //     [2,45,3,11,4,5,3,4,2,1,0]
+            //     [1,45,3,11,4,5,3,4,2,2,0]
+            //     [0,45,3,11,4,5,3,4,2,2,1]
+            // 当i = 1的时候
+
+        function Sort(arr){
+            for(var i=0;i<arr.length-1;i++){
+                for(var j=i+1;j<arr.length;j++){
+                    if(arr[i] > arr[j]){
+                        var str = arr[i];
+                        arr[i] = arr[j];
+                        arr[j] = str;
+                    }
+                }
+            }
+
+            return arr;
+
+        };
+
+        console.log(Sort(arr));
+
+
+
+    </script>
+</body>
+</html>

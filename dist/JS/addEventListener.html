@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btn">按钮</button>
+
+
+    <script>
+        // addEventListener  事件绑定
+        var oBtn = document.querySelector('#btn');
+
+        // oBtn.onclick = function(){
+        //     alert(1)
+        // };
+        //
+        //
+        // //改函数会把前面定义的函数覆盖掉。如果想保留前面的事件。那么就需要用addEventListener
+        // oBtn.onclick = function(){
+        //     console.log(2);
+        // };
+
+        oBtn.addEventListener('click', function(){
+            alert(1)
+        });
+        oBtn.addEventListener('click', function(){
+            console.log(2)
+        });
+
+
+        //第三个参数，是一个布尔值，
+        // true   表示捕获
+        // false  它的默认值   它表示冒泡
+
+    </script>
+</body>
+</html>

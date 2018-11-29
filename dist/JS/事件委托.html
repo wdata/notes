@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        li {
+            padding: 20px;
+            border: 1px solid red;
+        }
+    </style>
+</head>
+<body>
+
+    <button id="add">添加</button>
+    <ul>
+        <li>
+            1
+        </li>
+        <li>
+            2
+        </li>
+        <li>
+            3
+        </li>
+    </ul>
+
+    <script>
+
+        var aLi = document.querySelectorAll('li'),
+            oButton = document.querySelector('#add'),
+            oUl = document.querySelector('ul'),
+            i = 3;
+
+        //这样写，对于动态生成的li是无效的。
+        // for(var i=0;i<aLi.length;i++){
+        //     aLi[i].onclick = function(){
+        //         alert(1)
+        //     }
+        // };
+
+
+        oUl.onclick = function(e){
+            console.log(e.target.nodeName);
+            var nodeName = e.target.nodeName.toLowerCase();
+            if(nodeName === 'li'){
+                alert(1);
+            }
+
+        }
+
+
+        oButton.onclick = function(){
+            var li = document.createElement('li');
+            li.innerHTML = '添加的'+ (++i);
+            oUl.appendChild(li);
+        }
+
+
+
+
+
+
+    //jq 1.4-  bind/live
+    //jq   on API  delegate
+
+    //
+    // $('ul li').click(function(){
+    //     alert(1)
+    // });
+    //
+    // $('ul').on('li', 'click', function(){
+    //     alert(1)
+    // })
+
+
+
+    </script>
+
+
+
+</body>
+</html>

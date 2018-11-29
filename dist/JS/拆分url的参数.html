@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+        var url = "http://www.baidu.com?a=33&b=22&c&d=ererer";
+
+        function getParam(url){
+            var arr1 = url.split('?');
+            if(arr1.length < 2){
+                return {}
+            };
+
+            var result = {};
+            var url  =arr1[1];
+            url = url.split('&');
+
+            for(var i=0;i<url.length;i++){
+                url[i] = url[i].split('=');  //['a', 33]
+                if(url[i].length < 2){
+                    result[url[i][0]] = undefined
+                }else{
+                    result[url[i][0]] = url[i][1]
+                }
+            }
+
+            return result;
+
+        };
+
+        console.log(getParam(url));
+
+
+
+    </script>
+</body>
+</html>
