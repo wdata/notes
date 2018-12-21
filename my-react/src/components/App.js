@@ -6,11 +6,11 @@ class App extends Component {
   render() {
     return (
       <div>
-        // <Router>
-        //   <Switch>
-        //     <Route exact path="/mbox" component={Mobx}></Route>
-        //   </Switch>
-        // </Router>
+        <Router>
+          <Switch>
+            <Route exact path="/mobx" component={Mobx}></Route>
+          </Switch>
+        </Router>
       </div>
     );
   }

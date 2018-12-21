@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import Mobx01 from './Mobx_01';
+import Mobx11 from './Mobx1_1';
+import Mobx12 from './Mobx1_2';
+import Mobx21 from './Mobx2_1';
 
 class Mobx extends Component {
   constructor(props) {
@@ -7,13 +9,15 @@ class Mobx extends Component {
     this.state = {};
   }
   render() {
-    const id = 0;
+    const id = 21;
     return (
       <div className="mobx">
         {
           (() => {
             switch (id) {
-              case 0: return <Mobx01 />;
+              case 11: return <Mobx11 />;
+              case 12: return <Mobx12 />;
+              case 21: return <Mobx21 />;
               default: return <div>mobx</div>;
             }
           })()
