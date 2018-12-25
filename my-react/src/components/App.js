@@ -1,17 +1,29 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Mobx from './mobx/Mobx';
+
+/* antd国际化 */
+import { LocaleProvider } from 'antd';
+import zh_CN from 'antd/lib/locale-provider/zh_CN';
+import 'moment/locale/zh-cn';
+import 'antd/dist/antd.css';
+
+/* 全局样式 */
+import '../common/css/common.less';
+
+/* 全局数据 */
+import { Provider } from 'mobx-react';
+import store from '../state/store';
+
+import RouterIndex from '../router/Router';
+
 
 class App extends Component {
   render() {
     return (
-      <div>
-        <Router>
-          <Switch>
-            <Route exact path="/mobx" component={Mobx}></Route>
-          </Switch>
-        </Router>
-      </div>
+      <LocaleProvider locale={zh_CN}>
+        <Provider {...store}>
+          <RouterIndex />
+        </Provider>
+      </LocaleProvider>
     );
   }
 }
