@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import { Layout, Form, Input, Icon, Button, Checkbox } from 'antd';
-import { observer, inject } from 'mobx-react';
+import { inject } from 'mobx-react';
 import './Mobx.less';
 
 const {
@@ -16,7 +16,7 @@ class Landing extends Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
-        this.props.Mobx.landing(values.name, values.password);
+        this.props.Mobx.landing(values);
         this.props.history.push('/mobx/main');
       }
     });
