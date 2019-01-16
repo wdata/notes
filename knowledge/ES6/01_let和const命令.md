@@ -1,5 +1,8 @@
 ## let和const命令
 
+***
+
+
 学习和引用自[ECMAScript 6 入门 - 作者：阮一峰](http://es6.ruanyifeng.com/#docs/let)
 
 * [1、let的优势](#1)
@@ -7,16 +10,22 @@
   - 不存在变量提升
   - 暂时性死区
   - 不允许重复声明
+<br />
+
 * [2、块级作用域的作用](#2)
   - 原因：ES5只有全局作用域和函数作用域，没有块级作用域，这带来很多不合理的场景：
     - 1、内层变量可能会覆盖外层变量；
     - 2、用来计量的循环变量泄露为全局变量；
+<br />
+
 * [3、块级作用域与函数声明](#3)
   - ES5 规定，函数只能在顶层作用域和函数作用域之中声明，不能在块级作用域声明<span style="color: #a6e22e;">为了兼容旧代码，还是支持块级作用域之中声明函数</span>；
   - ES6规定（只对 ES6 的浏览器实现有效）：
     - 1、允许在块级作用域内声明函数；
-    - 2、函数声明类似于<span style="color: red;">var</span>，即会提升到全局作用域或函数作用域的头部
+    - 2、函数声明类似于<span style="color: #c7254e;">var</span>，即会提升到全局作用域或函数作用域的头部
     - 3、同时，函数声明还会提升到所在的块级作用域的头部
+<br />
+
 * [4、const 命令](#4)
   - [4.1、基本用法](#4_1)
     - 1、一旦声明，常量的值不能改变（一旦声明，必须立刻初始化）；
@@ -29,8 +38,10 @@
     - 复合数据类型（对象、数组），只能保证指针固定（类型不变），里面的内容不能保证；
   - [4.3、冻结对象](#4_3)
     - 方法：应该使用Object.freeze方法：const foo = Object.freeze({})；
+<br />
+
 * [5、ES6 声明变量的六种方法](#5)
-  - 定义：function 、 <span style="color: red;">var</span> 、let 、const 、inport 、class
+  - 定义：function 、 <span style="color: #c7254e;">var</span> 、let 、const 、inport 、class
   - [5.1、顶层对象的属性](#5_1)
     - 定义：在javaScript的设计中，顶层对象的属性和全局变量挂钩：
     - 无法在编译时，爆出未声明的错误，只有在运行时才知道；
@@ -46,6 +57,8 @@
       - 函数里面的this，如果函数不是作为对象的方法运行，而是单纯作为函数运行，this会指向顶层对象。但是，严格模式下，这时this会返回undefined。
       - 不管是严格模式，还是普通模式，new Function('return this')()，总是会返回全局对象。但是，如果浏览器用了 CSP（Content Security Policy，内容安全政策），那么eval、new Function这些方法都可能无法使用。
 
+
+***
 
 
 ### <div id="1">1、let的优势</div>
@@ -198,7 +211,7 @@ ES5 规定，函数只能在顶层作用域和函数作用域之中声明，不�
  ```
  但是，浏览器没有遵守这个规定，为了兼容以前的旧代码，还是支持在块级作用域之中声明函数，因此上面两种情况实际都能运行，不会报错。
 
- <span style="color: red;">ES6 引入了块级作用域，明确允许在块级作用域之中声明函数。</span>ES6 规定，块级作用域之中，函数声明语句的行为类似于let，在块级作用域之外不可引用。
+ <span style="color: #c7254e;">ES6 引入了块级作用域，明确允许在块级作用域之中声明函数。</span>ES6 规定，块级作用域之中，函数声明语句的行为类似于let，在块级作用域之外不可引用。
  ```
  {
     function f() { console.log('I am outside!'); }
@@ -222,7 +235,7 @@ ES5 规定，函数只能在顶层作用域和函数作用域之中声明，不�
  所以：ES6 在附录 B里面规定，浏览器的实现可以不遵守上面的规定，有自己的行为方式。
 
   * 允许在块级作用域内声明函数。
-  * 函数声明类似于<span style="color: red;">var</span>，即会提升到全局作用域或函数作用域的头部。
+  * 函数声明类似于<span style="color: #c7254e;">var</span>，即会提升到全局作用域或函数作用域的头部。
   * 同时，函数声明还会提升到所在的块级作用域的头部。
 
  注意，上面三条规则只对 ES6 的浏览器实现有效，其他环境的实现不用遵守，还是将块级作用域的函数声明当作let处理。
@@ -283,7 +296,7 @@ ES5 规定，函数只能在顶层作用域和函数作用域之中声明，不�
  {
     1、const foo = {};
         foo.name = "name"; // 这个是成功的！
-        foo = {}; // 这个会报错：r: Identifier 'foo' has already been declared；
+        foo = {}; // 这个会报错：r: Identifier 'foo' has already been decla#c7254e；
 
     2、const fob = [];
         fob.push(1); // 成功
@@ -307,7 +320,7 @@ ES5 规定，函数只能在顶层作用域和函数作用域之中声明，不�
  }
  ```
 ### <div id="5">5、ES6 声明变量的六种方法</div>
-function 、 <span style="color: red;">var</span> 、let 、const 、inport 、class
+function 、 <span style="color: #c7254e;">var</span> 、let 、const 、inport 、class
 
 ##### <div id="5_1">5.1、顶层对象的属性</div>
 在javaScript的设计中，顶层对象的属性和全局变量挂钩：
@@ -316,7 +329,7 @@ function 、 <span style="color: red;">var</span> 、let 、const 、inport 、c
  * 容易在打错字的情况下，创建全局变量；
  * 顶层对象的属性可以到处编写，不利于模块化编程；
 
-<span style="color: red;">var</span> 和 function 声明的变量继续与顶层对象挂钩，let 和 const 等ES6声明方式则不与顶层对象挂钩；
+<span style="color: #c7254e;">var</span> 和 function 声明的变量继续与顶层对象挂钩，let 和 const 等ES6声明方式则不与顶层对象挂钩；
 
 ##### <div id="5_2">5.2、global对象</div>
 ES5 的顶层对象，本身也是一个问题，因为它在各种实现里面是不统一的。
