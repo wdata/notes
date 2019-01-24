@@ -87,7 +87,7 @@ ES6 之前的数据类型：undefined、null、布尔值（Boolean）、字符�
 
 生成方式：通过 Symbol 函数生产；
 
-```
+```javascript
 {
   let s = Symbol();
 
@@ -102,7 +102,7 @@ ES6 之前的数据类型：undefined、null、布尔值（Boolean）、字符�
 
 1. Symbol 函数签 **不能用 new 命令**，否则会报错；因为生成的 Symbol 是一个原始类型的值，不是对象；
 2. Symbol 函数可以接受一个字符串作为参数，表示对 Symbol 实例的描述，用以作为区分；
-    ```
+    ```javascript
     {
       let s1 = Symbol('foo');
       let s2 = Symbol('bar');
@@ -115,7 +115,7 @@ ES6 之前的数据类型：undefined、null、布尔值（Boolean）、字符�
     }
     ```
 3. Symbol 函数的参数只是表示对当前 Symbol 值的描述，因此 **相同参数的 Symbol 函数的返回值是不相等的**；
-    ```
+    ```javascript
     {
       // 没有参数的情况
       let s1 = Symbol();
@@ -131,7 +131,7 @@ ES6 之前的数据类型：undefined、null、布尔值（Boolean）、字符�
     }
     ```
 4. Symbol 值不能与其他类型的值进行运算，会报错；
-    ```
+    ```javascript
     {
       let sym = Symbol('My symbol');
       `your symbol is ${sym}`
@@ -139,7 +139,7 @@ ES6 之前的数据类型：undefined、null、布尔值（Boolean）、字符�
     }
     ```
 5. Symbol 值可以显式转为字符串、布尔值，但不能转化为数值；
-    ```
+    ```javascript
     {
       ley sym = Symbol('My symbol');
       String(sym); // "Symbol(My symbol)"
@@ -158,7 +158,7 @@ ES6 之前的数据类型：undefined、null、布尔值（Boolean）、字符�
 
 > 这对于一个对象由多个模块构成的情况非常有用，能防止某一个键被不小心改写或覆盖。
 
-```
+```javascript
 {
   let mySymbol = Symbol();
 
@@ -184,7 +184,7 @@ ES6 之前的数据类型：undefined、null、布尔值（Boolean）、字符�
 
 Symbol 类型还可以用于定义一组常量，保证这组常量的值都是不相等的。
 
-```
+```javascript
 {
   const log = {};
 
@@ -200,7 +200,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
 
 常量使用 Symbol 值最大的好处，就是**其他任何值都不可能有相同的值了，因此可以保证上面的 switch 语句会按设计的方式工作**;
 
-```
+```javascript
 {
   const COLOR_RED    = Symbol();
   const COLOR_GREEN  = Symbol();
@@ -223,7 +223,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
 
 风格良好的代码，应该尽量消除魔术字符串，改由含义清晰的变量代替。
 
-```
+```javascript
 {
   function getArea(shape, options) {
     let area = 0;
@@ -243,7 +243,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
 ```
 上面代码中，字符串 Triangle 就是一个魔术字符串。它多次出现，与代码形成“强耦合”，不利于将来的修改和维护。
 
-```
+```javascript
 {
   const shapeType = {
     triangle: 'Triangle'
@@ -266,7 +266,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
 
 如果仔细分析，可以发现shapeType.triangle等于哪个值并不重要，只要确保不会跟其他shapeType属性的值冲突即可。因此，这里就很适合改用 Symbol 值。
 
-```
+```javascript
 {
   const shapeType = {
     triangle: Symbol()
@@ -276,7 +276,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
 
 ### <div id="4">4、属性名的遍历</div>
 * Symbol 作为属性名，**该属性不会出现在  <span style="color: #c7254e;">for...in</span>、<span style="color: #c7254e;">for...of</span> 循环中，也不会被 <span style="color: #c7254e;">Object.keys()</span>、<span style="color: #c7254e;">Object.getOwnPropertyNames()</span>、<span style="color: #c7254e;">JSON.stringify()</span> 返回**。
-  ```
+  ```javascript
   {
     const obj = {
       'a': 123
@@ -296,7 +296,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
 
 * 但 <span style="color: #c7254e;">Object.getOwnPropertySymbols</span> 方法，可以获取指定对象的所有 Symbol 属性名；
 
-  ```
+  ```javascript
   {
     const objectSymbols = Object.getOwnPropertySymbols(obj);
 
@@ -306,7 +306,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
   ```
 
 * <span style="color: #c7254e;">Reflect.ownKeys</span> 方法可以返回所有类型的键名，包括常规键名和Symbol键名；
-  ```
+  ```javascript
   {
     let obj = {
       [Symbol('my_key')]: 1,
@@ -320,7 +320,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
   ```
 
 由于以 Symbol 值作为名称的属性，不会被常规方法遍历得到。我们可以利用这个特性，为对象定义一些非私有的、但又希望只用于内部的方法。
-```
+```javascript
 {
   let size = Symbol('size');
 
@@ -356,7 +356,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
 ### <div id="5">5、Symbol.for()，Symbol.keyFor()</div>
 
 * <span style="color: #c7254e;">Symbol.for</span> : 接收一个字符串作为参数，然后搜索有没有以该参数作为名称的 Symbol 值，如果有，就返回这个 Symbol 值， 否则就新建并返回一个以该字符串为名称的 Symbol 值；**注意：2个比较的 Symbol 必须都是用 Symbol.for() 创建的**；
-  ```
+  ```javascript
   {
     let s1 = Symbol.for('foo');
     let s2 = Symbol.for('foo');
@@ -372,7 +372,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
   ```
 * <span style="color: #c7254e;">Symbol.for</span> 与 <span style="color: #c7254e;">Symbol</span>的不同点：Symbol.for 有 **登记机制**，会被登记在全局变量中供搜索。
 * <span style="color: #c7254e;">Symbol.keyFor</span> : 返回一个已登记（使用 Symbol.for 创建的）的 Symbol 类型值的 key；
-  ```
+  ```javascript
   {
     let s1 = Symbol.for("foo");
     Symbol.keyFor(s1) // "foo"
@@ -382,7 +382,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
   }
   ```
 * 注意：Symbol.for为 Symbol 值 **登记的名字，是全局环境的**，可以在不同的 iframe 或 service worker 中取到同一个值。 **所以Symbol.for可以用来存储简单的全局数据**；
-  ```
+  ```javascript
   {
     iframe = document.createElement('iframe');
     iframe.src = String(window.location);
@@ -397,7 +397,7 @@ Symbol 类型还可以用于定义一组常量，保证这组常量的值都是�
 Singleton 模式指的是调用一个类，任何时候返回的都是同一个实例。
 
 使用 Symbol 可以防止模块调用执行的都是同一个实例：
-```
+```javascript
 {
   // mod.js
   const FOO_KEY = Symbol.for('foo');
@@ -414,7 +414,7 @@ Singleton 模式指的是调用一个类，任何时候返回的都是同一个�
 }
 ```
 上面代码中，可以保证 global[FOO_KEY] 不会被无意间覆盖，但还是可以被改写。
-```
+```javascript
 {
   global[Symbol.for('foo')] = { foo: 'world' };
 
@@ -428,7 +428,7 @@ Singleton 模式指的是调用一个类，任何时候返回的都是同一个�
 
 ##### <div id="7_1">7.1、Symbol.hasInstance</div>
 <span style="color: #c7254e;">Symbol.hasInstance</span>：对象的 Symbol.hasInstance 属性，指向一个内部方法。当其他对象使用 instanceof 运算符，判断是否为该对象的实例时，会调用这个方法。
-```
+```javascript
 {
   class MyClass {
     [Symbol.hasInstance](foo) {
@@ -442,7 +442,7 @@ Singleton 模式指的是调用一个类，任何时候返回的都是同一个�
 
 ##### <div id="7_2">7.2、Symbol.isConcatSpreadable</div>
 <span style="color: #c7254e;">Symbol.isConcatSpreadable</span>：对象的 Symbol.isConcatSpreadable 属性等于一个布尔值，表示该对象用于 Array.prototype.concat() 时，是否可以展开。
-```
+```javascript
 {
   let arr1 = ['c', 'd'];
   ['a', 'b'].concat(arr1, 'e') // ['a', 'b', 'c', 'd', 'e']
@@ -457,7 +457,7 @@ Singleton 模式指的是调用一个类，任何时候返回的都是同一个�
 }
 ```
 类似数组的对象正好相反，默认不展开。它的 Symbol.isConcatSpreadable 属性设为true，才可以展开。
-```
+```javascript
 {
   let obj = {length: 2, 0: 'c', 1: 'd'};
   ['a', 'b'].concat(obj, 'e') // ['a', 'b', obj, 'e']
@@ -469,7 +469,7 @@ Singleton 模式指的是调用一个类，任何时候返回的都是同一个�
 
 ##### <div id="7_3">7.3、Symbol.species</div>
 <span style="color: #c7254e;">Symbol.species</span>：对象的 Symbol.species 属性，指向一个构造函数。创建衍生对象时，会使用该属性。
-```
+```javascript
 {
   class MyArray extends Array {
   }
@@ -486,7 +486,7 @@ Singleton 模式指的是调用一个类，任何时候返回的都是同一个�
 
 Symbol.species属性就是为了解决这个问题而提供的。
 
-```
+```javascript
 {
   class MyArray extends Array {
     static get [Symbol.species]() { return Array; }
@@ -506,7 +506,7 @@ Symbol.species属性就是为了解决这个问题而提供的。
 ##### <div id="7_4">7.4、Symbol.match</div>
 <span style="color: #c7254e;">Symbol.match</span>：对象的 Symbol.match 属性，指向一个函数。当执行str.match(myObject)时，如果该属性存在，会调用它，返回该方法的返回值。
 
-```
+```javascript
 {
   String.prototype.match(regexp)
   // 等同于
@@ -525,7 +525,7 @@ Symbol.species属性就是为了解决这个问题而提供的。
 ##### <div id="7_5">7.5、Symbol.replace</div>
 <span style="color: #c7254e;">Symbol.replace</span>：对象的 Symbol.replace 属性，指向一个方法，当该对象被 String.prototype.replace 方法调用时，会返回该方法的返回值。
 
-```
+```javascript
 {
   String.prototype.replace(searchValue, replaceValue)
   // 等同于
@@ -535,7 +535,7 @@ Symbol.species属性就是为了解决这个问题而提供的。
 
 下面是一个例子。
 
-```
+```javascript
 {
   const x = {};
   x[Symbol.replace] = (...s) => console.log(s);
@@ -548,7 +548,7 @@ Symbol.replace方法会收到两个参数，第一个参数是replace方法正�
 
 ##### <div id="7_6">7.6、Symbol.search</div>
 <span style="color: #c7254e;">Symbol.search</span>：对象的 Symbol.search 属性，指向一个方法，当该对象被 String.prototype.search 方法调用时，会返回该方法的返回值。
-```
+```javascript
 {
   String.prototype.search(regexp)
   // 等同于
@@ -568,7 +568,7 @@ Symbol.replace方法会收到两个参数，第一个参数是replace方法正�
 
 ##### <div id="7_7">7.7、Symbol.split</div>
 <span style="color: #c7254e;">Symbol.split</span>：对象的 Symbol.split 属性，指向一个方法，当该对象被 String.prototype.split 方法调用时，会返回该方法的返回值。
-```
+```javascript
 {
   String.prototype.split(separator, limit)
   // 等同于
@@ -577,7 +577,7 @@ Symbol.replace方法会收到两个参数，第一个参数是replace方法正�
 ```
 下面是一个例子。
 
-```
+```javascript
 {
   class MySplitter {
     constructor(value) {
@@ -611,7 +611,7 @@ Symbol.replace方法会收到两个参数，第一个参数是replace方法正�
 ##### <div id="7_8">7.8、Symbol.iterator</div>
 <span style="color: #c7254e;">Symbol.iterator</span>：对象的 Symbol.iterator 属性，指向该对象的默认遍历器方法。
 
-```
+```javascript
 {
   const myIterable = {};
   myIterable[Symbol.iterator] = function* () {
@@ -626,7 +626,7 @@ Symbol.replace方法会收到两个参数，第一个参数是replace方法正�
 
 对象进行for...of循环时，会调用Symbol.iterator方法，返回该对象的默认遍历器，详细介绍参见《Iterator 和 for...of 循环》一章。
 
-```
+```javascript
 {
   class Collection {
     *[Symbol.iterator]() {
@@ -660,7 +660,7 @@ Symbol.toPrimitive 被调用时，会接受一个字符串参数，表示当前�
 * String：该场合需要转成字符串
 * Default：该场合可以转成数值，也可以转成字符串
 
-```
+```javascript
 {
   let obj = {
     [Symbol.toPrimitive](hint) {
@@ -689,7 +689,7 @@ Symbol.toPrimitive 被调用时，会接受一个字符串参数，表示当前�
 
 也就是说，这个属性可以用来定制[object Object]或[object Array]中object后面的那个字符串。
 
-```
+```javascript
 {
   // 例一
   ({[Symbol.toStringTag]: 'Foo'}.toString())
@@ -728,7 +728,7 @@ ES6 新增内置对象的Symbol.toStringTag属性值如下：
 ##### <div id="7_11">7.11、Symbol.unscopables</div>
 <span style="color: #c7254e;">Symbol.unscopables</span>：对象的 Symbol.unscopables 属性，指向一个对象。该对象指定了使用with关键字时，哪些属性会被 with 环境排除。
 
-```
+```javascript
 {
   Array.prototype[Symbol.unscopables]
   // {
@@ -746,7 +746,7 @@ ES6 新增内置对象的Symbol.toStringTag属性值如下：
 }
 ```
 上面代码说明，数组有 7 个属性，会被 with 命令排除。
-```
+```javascript
 {
   // 没有 unscopables 时
   class MyClass {

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>document.domain + iframe跨域</title>
+</head>
+<body>
+<h2>document.domain + iframe跨域</h2>
+<p>此方案仅限主域相同，子域不同的跨域应用场景。</p>
+<p>实现原理：两个页面都通过js强制设置document.domain为基础主域，就实现了同域。</p>
+<iframe id="iframe" src="./iframe.html"></iframe>
+
+<script type="text/javascript">
+  document.domain = 'domain';
+  var user = 'domain';
+</script>
+</body>
+</html>

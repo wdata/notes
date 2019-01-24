@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>document.domain + iframe跨域子页面</title>
+</head>
+<body>
+<h2>子页面</h2>
+<script>
+  document.domain = 'domain.com';
+  // 获取父窗口的变量
+  alert('get js data from parent ---> ' + window.parent.user);
+</script>
+</body>
+</html>
