@@ -5,27 +5,109 @@
 学习和引用自[ECMAScript 6 入门 - 作者：阮一峰](http://es7.ruanyifeng.com/#docs/destructuring)
 <br />
 
-* [1、Set](#1)
+* [1、Promise 的含义](#1)
+  - 定义：所谓 <span style="color: #c7254e;">Promise</span>，简单说就是一个容器，里面保存着某个未来才会结束的事件（通常是一个异步操作）的结果。从语法上说，<font color='#c7254e' >Promise</font> 是一个对象，从它可以获取异步操作的消息。<font color='#c7254e' >Promise</font> 提供统一的 API，各种异步操作都可以用同样的方法进行处理。
+  - 特点：
+    1. **对象的状态不受外界影响**。<span style="color: #c7254e;">Promise</span>对象代表一个异步操作，有三种状态：<span style="color: #c7254e;">pending</span>（进行中）、<span style="color: #c7254e;">fulfilled</span>（已成功）和<span style="color: #c7254e;">rejected</span>（已失败）。只有异步操作的结果，可以决定当前是哪一种状态，任何其他操作都无法改变这个状态。
+    2.  **一旦状态改变，就不会再变，任何时候都可以得到这个结果**。<span style="color: #c7254e;">Promise</span>对象的状态改变，只有两种可能：从 <span style="color: #c7254e;">pending</span> 变为 <span style="color: #c7254e;">fulfilled</span> 和从 <span style="color: #c7254e;">pending</span> 变为 <span style="color: #c7254e;">rejected</span>。只要这两种情况发生，状态就凝固了，不会再变了，会一直保持这个结果，这时就称为  <span style="color: #c7254e;">resolved</span> （已定型）。
+  * 缺点：
+    1. 首先，无法取消 <span style="color: #c7254e;">Promise</span>，一旦新建它就会立即执行，无法中途取消；
+    2. 其次，如果不设置回调函数，<span style="color: #c7254e;">Promise</span> 内部抛出的错误，不会反应到外部；
+    3. 当处于 <span style="color: #c7254e;">pending</span> 状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）；
 <br />
-* [2、Set](#2)
+
+* [2、基本用法](#2)
+  - <span style="color: #c7254e;">Promise</span>对象是一个构造函数
+  - 参数：
+    1. <span style="color: #c7254e;">resolve</span>函数将 Promise 对象的状态从 **‘未完成’ =》 ‘成功’ （即 peding =》 <font color='#c7254e' >resolved</font>）**，在异步操作成功时调用，并将 **异步操作的结果，作为参数调用出去**；
+    2. <span style="color: #c7254e;">reject</span>函数将 Promise 对象的状态从 **‘未完成’ =》 ‘失败’ （即 peding =》 <font color='#c7254e' >rejected</font>）**，异步操作失败时调用，并将 **异步操作报出的错误，作为参数传递出去**。
+  * 注意：
+    1. **Promise 新建后会立即执行**；
+    2. 如果调用 resolve 函数和 reject 函数时带有参数，那么它们的参数会被传递给回调函数。
+        * reject 函数的参数通常是Error对象的实例，表示抛出的错误；
+        * resolve 函数的参数除了正常的值以外，还可能是另一个 Promise 实例；
+    3. **调用 <span style="color: #c7254e;">resolve</span> 或 <span style="color: #c7254e;">reject</span> 并不会终结  <span style="color: #c7254e;">Promise</span>  的参数函数的执行**。
 <br />
-* [3、Set](#3)
+* [3、Promise.prototype.then()](#3)
+  - 作用：为 Promise 实例添加状态改变时的回调函数；
+  - 参数：
+    1. 第一个参数是<font color='#c7254e' >resolved</font>状态的回调函数；
+    2. 第二个参数（可选）是<font color='#c7254e' >rejected</font>状态的回调函数；
+  - 特点：
+    1. then可以使用链式调用，可以指定一组按照次序调用的回调函数。第一个回调函数的返回，在第二个回调函数中作为参数接收，依次调用；
+    2. 前一个回调函数返回一个 Promise 对象（即异步操作），这时后一个回调函数的回调函数就会等待Promise对象的状态发生变化，才会被调用；
 <br />
-* [4、Set](#4)
+* [4、Promise.prototype.catch()](#4)
+  - 作用：用于指定发生错误时的回调函数；
+  - 抛出错误的原因：
+    1. <font color='#c7254e' >Promise</font> 对象，如果异步操作抛出错误，状态就会改变为<font color='#c7254e' >rejected</font>，就会调用catch方法指定的回调函数，处理这个错误：
+    2. 如果then方法指定的回调函数，如果运行中抛出错误，也会被catch方法捕获；
+  - 注意：
+    1. **如果Pormise状态已经变成<font color='#c7254e' >resolved</font>，再抛出错误是无效的**；
+    2. **Promise对象的错误具有‘冒泡’性质，会一直向后传递，直到会被捕获为止**；
+    3. **不要在then方法里面定义Rejct状态的回调函数（即then的第二个参数），总是用cahch方法**；
+    4. **如果没有使用catch方法指定错误的回调函数，<font color='#c7254e' >Promise</font> 对象抛出的错误不会传递到外层代码，即不会有任何反应**；
+    5. **eatch方法要放在最后面执行，因为eatch方法后面跟then方法报错时，之前的eatch方法不会执行**；
 <br />
-* [5、Set](#5)
+* [5、Promise.prototype.finally()](#5)
+  - **<font color='#c7254e' >finally</font>方法用于指定不管 Promise 对象最后状态如何，都会执行的操作**。
+  - 注意：
+    1. **<font color='#c7254e' >finally</font>方法的回调函数不接受任何参数，这意味着没有办法知道，前面的<font color='#c7254e' >Promise</font>状态到底是fufilied还是<font color='#c7254e' >rejected</font>**。表面，<font color='#c7254e' >finally</font>方法的操作，与状态无关，不依赖<font color='#c7254e' >Promise</font>的执行结果。
+    2. <font color='#c7254e' ><font color='#c7254e' >finally</font></font>本质上是then方法的特例；
+  -
 <br />
-* [6、Set](#6)
+
+* [6、Promise.all()](#6)
+  - **<font color='#c7254e' >Promise.all</font>方法用于将多个<font color='#c7254e' >Promise</font>实例，包装成一个新的<font color='#c7254e' >Promise</font>实例**。
+  - 特点：
+    1. <font color='#c7254e' >Promise.all</font>方法可以接收一个数组作为参数，p1、p2、p3都是<font color='#c7254e' >Promise</font>实例；
+    2. 如果不是实例，就会调用<font color='#c7254e' >Promise.resolve</font>方法，将参数转化为<font color='#c7254e' >Promise</font>实例；
+    3. <font color='#c7254e' >Promise.all</font>方法的参数可以不是数组，但是必须具有Iterator接口，且返回的每个成员都是<font color='#c7254e' >Promise</font>实例；
+  - 注意：
+    1. <font color='#c7254e' >Promise.all</font>链接的方法，可以数组格式接收参数<font color='#c7254e' >Promise</font>实例返回的值；
+    2. **<font color='#c7254e' >Promise.all</font>需要等参数<font color='#c7254e' >Promise</font>实例的结果都返回，才会触法回调函数**；
+    3. 作为参数的<font color='#c7254e' >Promise</font>实例，自己定义了catch方法，如果结果为<font color='#c7254e' >rejected</font>，并不会触法<font color='#c7254e' >Promise.all()</font>的catch方法；
+    4. **如果在使用<font color='#c7254e' >Promise.all</font>方法在某一个参数<font color='#c7254e' >Promise</font>实例报错是执行catch方法，可以在这个参数<font color='#c7254e' >Promise</font>实例中添加catch方法，那么参数<font color='#c7254e' >Promise</font>实例报错时，就不会执行<font color='#c7254e' >Promise.all</font>的catch方法**
 <br />
-* [7、Set](#7)
+
+* [7、Promise.race()](#7)
+  - <font color='#c7254e' >Promise.race</font>方法同样是将多个<font color='#c7254e' >Promise</font>实例，包装成一个新的<font color='#c7254e' >Promise</font>实例；
+  - 与<font color='#c7254e' >Promise.all</font>的不同点：
+    1. **只要任意一个参数<font color='#c7254e' >Promise</font>实例率先改变状态，新的<font color='#c7254e' >Promise</font>实例就会先调用<font color='#c7254e' >Promise.resolve</font>方法，将其参数转化为<font color='#c7254e' >Promise</font>实例，在进一步处理**。
 <br />
-* [8、Set](#8)
+
+* [8、Promise.resolve()](#8)
+  - <font color='#c7254e' >Promise.resolve</font>方法可以将对象转为Promise对象;
+  - <font color='#c7254e' >Promise.resolve</font>方法的参数分成四种情况：
+    1. [8.1、参数是一个Promise实例：](#8_1)
+        * 如果参数是<font color='#c7254e' >Promise</font>实例，那么<font color='#c7254e' >Promise.resolve</font>将不做任何修改、原封不动地返回这个实例。
+    2. [8.2、参数是一个thenable对象：](#82)
+        - theable对象是指具有then方法的对象，比如下面这个对象：
+    3. [8.3、参数不是具有then方法的对象，或根本就不是对象；](#8_3)
+        - 如果参数是一个原始值，或者是一个不具有then方法的对象，则<font color='#c7254e' >Promise.resolve</font>方法返回一个新的<font color='#c7254e' >Promise</font>对象，状态为<font color='#c7254e' >resolved</font>。
+    4. [8.4、不带有任何的参数；](#8_4)
+        - <font color='#c7254e' >Promise.resolve</font>方法允许调用时不带参数，直接返回一个<font color='#c7254e' >resolved</font>状态的<font color='#c7254e' >Promise</font>对象。
 <br />
-* [9、Set](#9)
+
+* [9、Promise.reject()](#9)
+  - Promise.reject(reason)方法返回一个状态为<font color='#c7254e' >rejected</font>的<font color='#c7254e' >Promise</font>实例；
+  - 注意：**<font color='#c7254e' >Promise.reject()</font>方法的参数，会原封不动地作为reject的理由，变成后续方法的参数**。这一点与<font color='#c7254e' >Promise.resolve</font>方法不一致。
 <br />
-* [10、Set](#10)
+* [10、应用](#10)
+  - [10.1、加载图片](#10_1)
+    - 我们可以将图片的加载写成一个<font color='#c7254e' >Promise</font>，一旦加载完成，<font color='#c7254e' >Promise</font>的状态就发生变化。
+  - [10.2、Generator函数与Promise的结合](#10_2)
+    - 使用 Generator 函数管理流程，遇到异步操作的时候，通常返回一个<font color='#c7254e' >Promise</font>对象。
 <br />
-* [11、Set](#11)
+
+* [11、Promise.try()](#11)
+  - Promise.try可以让同步函数同步执行，让异步函数异步执行。
+  - 实际开发中，经常遇到一种情况：不知道或者不想区分，函数f是同步函数还是异步操作，但是想用 <font color='#c7254e' >Promise</font> 来处理它。因为这样就可以不管f是否包含异步操作，都用then方法指定下一步流程，用catch方法处理f抛出的错误。
+  - 原来的两种方法：
+    - [11.1、用async函数来写](#11_1)
+    - [11.2、使用new Promise()](#11_2)
+  - 提供了新的方法[11.1、使用Promise.try方法](#11_3)
+    - 事实上，Promise.try就是模拟try代码块，就像promise.catch模拟的是catch代码块。
 <br />
 
 
@@ -497,7 +579,7 @@ Promise参数：
 注意：
 1、**<font color='#c7254e' >finally</font>方法的回调函数不接受任何参数，这意味着没有办法知道，前面的<font color='#c7254e' >Promise</font>状态到底是fufilied还是<font color='#c7254e' >rejected</font>**。表面，<font color='#c7254e' >finally</font>方法的操作，与状态无关，不依赖<font color='#c7254e' >Promise</font>的执行结果。
 
-2、<font color='#c7254e' ><font color='#c7254e' >finally</font></font>本质上是then方法的特例
+2、<font color='#c7254e' ><font color='#c7254e' >finally</font></font>本质上是then方法的特例；
 ```js
 {
   promise.finally(() => {
@@ -744,11 +826,11 @@ p的状态由p1、p2、p3决定，分为两种情况：
 
 <font color='#c7254e' >Promise.resolve</font>方法的参数分成四种情况：
 
-###### 1）、参数是一个Promise实例：
+###### 1）、<span id="8_1">参数是一个Promise实例：</span>
 
 如果参数是<font color='#c7254e' >Promise</font>实例，那么<font color='#c7254e' >Promise.resolve</font>将不做任何修改、原封不动地返回这个实例。
 
-###### 2）、参数是一个thenable对象：
+###### 2）、<span id="8_2">参数是一个thenable对象：</span>
 
 theable对象是指具有then方法的对象，比如下面这个对象：
 ```js
@@ -770,7 +852,7 @@ theable对象是指具有then方法的对象，比如下面这个对象：
 ```
 上面的代码中，thenable对象的then方法执行后，对象p1的状态变为<font color='#c7254e' >resolved</font>，从而立即执行最后那个then方法执行的回调函数。
 
-###### 3）、参数不是具有then方法的对象，或根本就不是对象；
+###### 3）、<span id="8_3">参数不是具有then方法的对象，或根本就不是对象；</span>
 
 如果参数是一个原始值，或者是一个不具有then方法的对象，则<font color='#c7254e' >Promise.resolve</font>方法返回一个新的<font color='#c7254e' >Promise</font>对象，状态为<font color='#c7254e' >resolved</font>。
 ```js
@@ -782,7 +864,7 @@ theable对象是指具有then方法的对象，比如下面这个对象：
 ```
 上面代码生成一个新的 <font color='#c7254e' >Promise</font> 对象的实例p。由于字符串Hello不属于异步操作（判断方法是字符串对象不具有 then 方法），返回 <font color='#c7254e' >Promise</font> 实例的状态从一生成就是<font color='#c7254e' >resolved</font>，所以回调函数会立即执行。<font color='#c7254e' >Promise.resolve</font>方法的参数，会同时传给回调函数。
 
-###### 4）、不带有任何的参数；
+###### 4）、<span id="8_4">不带有任何的参数；</span>
 
 <font color='#c7254e' >Promise.resolve</font>方法允许调用时不带参数，直接返回一个<font color='#c7254e' >resolved</font>状态的<font color='#c7254e' >Promise</font>对象。
 
@@ -811,7 +893,7 @@ theable对象是指具有then方法的对象，比如下面这个对象：
 
 ### <div id="9">9、Promise.reject()</div>
 
-Promise.reject(reason)方法返回一个状态为<font color='#c7254e' >rejected</font>的<font color='#c7254e' >Promise</font>实例
+Promise.reject(reason)方法返回一个状态为<font color='#c7254e' >rejected</font>的<font color='#c7254e' >Promise</font>实例；
 
 ```js
 {
@@ -839,7 +921,7 @@ Promise.reject(reason)方法返回一个状态为<font color='#c7254e' >rejected
 
 ### <div id="10">10、应用</div>
 
-###### 1）、加载图片
+###### 1）、<span id="10_1">加载图片</span>
 
 我们可以将图片的加载写成一个<font color='#c7254e' >Promise</font>，一旦加载完成，<font color='#c7254e' >Promise</font>的状态就发生变化。
 ```js
@@ -855,7 +937,7 @@ Promise.reject(reason)方法返回一个状态为<font color='#c7254e' >rejected
 }
 ```
 
-###### 2）、Generator函数与Promise的结合
+###### 2）、<span id="10_2">Generator函数与Promise的结合</span>
 
 使用 Generator 函数管理流程，遇到异步操作的时候，通常返回一个<font color='#c7254e' >Promise</font>对象。
 ```js
@@ -919,7 +1001,7 @@ Promise.try可以让同步函数同步执行，让异步函数异步执行。
 那么有没有一种方法，让同步函数同步执行，异步函数异步执行，并且让它们具有统一的 API 呢？回答是可以的，并且还有两种写法。
 
 原来的两种方式：
-###### 1）、用async函数来写：
+###### 1）、<span id="11_1">用async函数来写：</span>
 ```js
 {
   const f = () => console.log('now');
@@ -948,7 +1030,7 @@ Promise.try可以让同步函数同步执行，让异步函数异步执行。
 }
 ```
 
-###### 2）、使用new Promise()；
+###### 2）、<span id="11_1">使用new Promise()；</span>
 
 ```js
 {
@@ -965,7 +1047,7 @@ Promise.try可以让同步函数同步执行，让异步函数异步执行。
 ```
 上面代码也是使用立即执行的匿名函数，执行new Promise()。这种情况下，同步函数也是同步执行的。
 
-###### 使用Promise.try方法；
+###### <span id="11_3">使用Promise.try方法；</span>
 ```js
 {
   const f = () => console.log('now');
