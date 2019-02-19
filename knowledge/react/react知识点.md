@@ -1,5 +1,30 @@
 ## 常见react问题
 
+* [React 中 keys 的作用是什么？](#1)
+* [调用 setState 之后发生了什么？](#2)
+* [react 生命周期函数](#3)
+* [shouldComponentUpdate 是做什么的，（react 性能优化是哪个周期函数？）](#4)
+* [为什么虚拟 dom 会提高性能?（必考）](#5)
+* [react diff 原理（常考，大厂必考）](#6)
+* [React 中 refs 的作用是什么？](#7)
+* [如果你创建了类似于下面的 Twitter 元素，那么它相关的类定义是啥样子的？](#8)
+* [展示组件（Presentational component）和容器组件（Container component）之间有何不同](#9)
+* [类组件(Class component)和函数式组件(Functional component)之间有何不同](#10)
+* [(组件的)状态(state)和属性(props)之间有何不同](#11)
+* [何为受控组件(controlled component)](#12)
+* [何为高阶组件(higher order component)](#13)
+* [为什么建议传递给 setState 的参数是一个 callback 而不是一个对象](#14)
+* [除了在构造函数中绑定 this，还有其它方式吗？](#15)
+* [(在构造函数中)调用 super(props) 的目的是什么](#16)
+* [应该在 React 组件的何处发起 Ajax 请求](#17)
+* [描述事件在 React 中的处理方式。](#18)
+* [createElement 和 cloneElement 有什么区别？](#19)
+* [React 中有三种构建组件的方式](#20)
+* [react 组件的划分业务组件技术组件？](#21)
+* [简述 flux 思想](#22)
+* [React 项目用过什么脚手架（本题是开放性题目）](#23)
+* [了解 redux 么，说一下 redux 把](#24)
+* [redux 有什么缺点](#25)
 
 #### <div id="1">React 中 keys 的作用是什么？</div>
 Keys 是 React 用于追踪哪些列表中元素被修改、被添加或者被移除的辅助标识。
@@ -247,7 +272,7 @@ React.createClass()、ES6 class 和无状态函数。
 * UI 组件负责 UI 的呈现，容器组件负责管理数据和逻辑。
 * 两者通过 React-Redux 提供 connect 方法联系起来。
 
-#### <div id="21">简述 flux 思想</div>
+#### <div id="22">简述 flux 思想</div>
 
 Flux 的最大特点，就是数据的"单向流动"。
 
@@ -257,16 +282,17 @@ Flux 的最大特点，就是数据的"单向流动"。
 4. Store 更新后，发出一个"change"事件
 5. View 收到"change"事件后，更新页面
 
-#### <div id="22">React 项目用过什么脚手架（本题是开放性题目）</div>
+#### <div id="23">React 项目用过什么脚手架（本题是开放性题目）</div>
 
 creat-react-app Yeoman 等
 
-#### <div id="22">了解 redux 么，说一下 redux 把</div>
+#### <div id="24">了解 redux 么，说一下 redux 把</div>
 
 * redux 是一个应用数据流框架，主要是解决了组件间状态共享的问题，原理是集中式管理，主要有三个核心方法，action，store，reducer，工作流程是 view 调用 store 的 dispatch 接收 action 传入 store，reducer 进行 state 操作，view 通过 store 提供的 getState 获取最新的数据，flux 也是用来进行数据操作的，有四个组成部分 action，dispatch，view，store，工作流程是 view 发出一个 action，派发器接收 action，让 store 进行数据更新，更新完成以后 store 发出 change，view 接受 change 更新视图。Redux 和 Flux 很像。主要区别在于 Flux 有多个可以改变应用状态的 store，在 Flux 中 dispatcher 被用来传递数据到注册的回调事件，但是在 redux 中只能定义一个可更新状态的 store，redux 把 store 和 Dispatcher 合并,结构更加简单清晰
 * 新增 state,对状态的管理更加明确，通过 redux，流程更加规范了，减少手动编码量，提高了编码效率，同时缺点时当数据更新时有时候组件不需要，但是也要重新绘制，有些影响效率。一般情况下，我们在构建多交互，多数据流的复杂项目应用时才会使用它们
 
-#### <div id="23">redux 有什么缺点</div>
+#### <div id="25">redux 有什么缺点</div>
 
 * 一个组件所需要的数据，必须由父组件传过来，而不能像 flux 中直接从 store 取。
 * 当一个组件相关数据更新时，即使父组件不需要用到这个组件，父组件还是会重新 render，可能会有效率影响，或者需要写复杂的 shouldComponentUpdate 进行判断。
+<br />
