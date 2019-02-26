@@ -209,7 +209,7 @@ Refs 是 React 提供给我们的安全访问 DOM 元素或者某个组件实例
 
 #### <div id="12">何为受控组件(controlled component)</div>
 
-在 HTML 中，类似 <span><input></span>, <span><textarea></span> 和 <span><select></span> 这样的表单元素会维护自身的状态，并基于用户的输入来更新。当用户提交表单时，前面提到的元素的值将随表单一起被发送。但在 React 中会有些不同，包含表单元素的组件将会在 state 中追踪输入的值，并且每次调用回调函数时，如 onChange 会更新 state，重新渲染组件。一个输入表单元素，它的值通过 React 的这种方式来控制，这样的元素就被称为"受控元素"。
+在 HTML 中，类似 `<span><input></span>, <span><textarea></span> 和 <span><select></span>` 这样的表单元素会维护自身的状态，并基于用户的输入来更新。当用户提交表单时，前面提到的元素的值将随表单一起被发送。但在 React 中会有些不同，包含表单元素的组件将会在 state 中追踪输入的值，并且每次调用回调函数时，如 onChange 会更新 state，重新渲染组件。一个输入表单元素，它的值通过 React 的这种方式来控制，这样的元素就被称为"受控元素"。
 
 #### <div id="13">何为高阶组件(higher order component)</div>
 
