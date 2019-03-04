@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body, main::before {
+            background: url("http://img4.imgtn.bdimg.com/it/u=919728853,1641729567&fm=27&gp=0.jpg") 0 / cover fixed;
+        }
+        main {
+            position: relative;
+            background: hsla(0, 0%, 100%, .3);
+            overflow: hidden;
+        }
+        main::before {
+            content:'';
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            filter: blur(20px);
+            margin: -30px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <blockquote>“The only way to get rid of a temptation[…]”
+        <footer>— <cite> Oscar Wilde, The Picture of Dorian Gray </cite>
+        </footer>
+    </blockquote>
+</main>
+</body>
+</html>

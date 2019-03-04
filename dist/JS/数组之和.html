@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+
+        var arr = [2,3,4,5,1,4];
+
+        // 遍历  for
+        // 01
+        // function getAdd(arr){
+        //     var num = 0;
+        //     for(var i=0;i<arr.length;i++){
+        //         num += arr[i]
+        //     };
+        //     return num;
+        // };
+        //
+        // console.log(getAdd(arr));
+
+
+        // 02  foreach   es5
+
+        // function getAdd(arr){
+        //     var num = 0;
+        //     arr.forEach(function(item,index){
+        //         //item 表示数组里面的每一条数据
+        //         //index  索引
+        //         num += item;
+        //     })
+        //
+        //
+        //     return num;
+        // };
+        //
+        // console.log(getAdd(arr));
+
+
+
+
+        // 03  reduce
+        // reduce里面有两个值， 第一个值是上一次的值，第二个值是当前的。
+        // 如果是第一次遍历，第一个值就是数组的第一个，第二个值就是数组的第二个
+        // function getAdd(arr){
+        //     return arr.reduce(function(prev,cur){
+        //             return prev + cur
+        //         })
+        // };
+        //
+        // console.log(getAdd(arr));
+
+
+        // 04  eval  执行js语句
+        // eval  有性能问题的。尽量少用。
+
+        function getAdd(arr){
+            return eval(arr.join('+'));
+        };
+
+        console.log(getAdd(arr));
+
+
+
+
+    </script>
+
+</body>
+</html>

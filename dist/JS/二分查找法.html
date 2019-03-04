@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <script>
+    //如果要使用二分查找法，必须把数组给它排序好。
+        var arr = [1,2,3,4,5,6,7,8,9];
+
+        function er(arr,num,start,end){
+            var start = start || 0;
+            var end = end || arr.length;
+
+            if(start > end){
+                return false;
+            }
+
+            var midIndex = Math.floor((start+end)/2);
+            var midValue = arr[midIndex];
+
+            if(num == midValue){
+                return '你要找的值是：'+ num +',它的索引是'+ midIndex;
+            }else{
+                if( num > midValue){
+                    return er(arr,num,midIndex+1)
+                }else{
+                    return er(arr,num,0,midIndex)
+                }
+            }
+        };
+
+        console.log(er(arr,2));
+
+
+    </script>
+</body>
+</html>

@@ -64,10 +64,10 @@
 4. 有序列表4
 5. 有序列表5
 
-3. 有序列表3 
+3. 有序列表3
 8. 有序列表8
-6. 有序列表6 
-1. 有序列表1 
+6. 有序列表6
+1. 有序列表1
 ##### 有序列表的序号是根据第一行列表的数字顺序来的
 ```
 {
@@ -76,11 +76,11 @@
     3. 有序列表3
     4. 有序列表4
     5. 有序列表5
-    
-    3. 有序列表3 
+
+    3. 有序列表3
     8. 有序列表8
-    6. 有序列表6 
-    1. 有序列表1 
+    6. 有序列表6
+    1. 有序列表1
 }
 ```
 
@@ -94,15 +94,15 @@
 * 前方高能
   > 注意：注意这是为了提醒前方有很刺激的事情发生，请
   做好准备；
-  
-  
+
+
 > ## 标题
 > * 不以结婚为目的的谈恋爱都是刷流氓
 >   > 毛主席
 > * 前方高能
 >   > 注意：注意这是为了提醒前方有很刺激的事情发生，请
       做好准备；
-  
+
 > 一级引用
 >> 二级引用
 >>> 三级引用
@@ -114,7 +114,7 @@
 {
     * 不以结婚为目的的谈恋爱都是刷流氓
       > 毛主席
-      
+
     > ## 标题
     > * 不以结婚为目的的谈恋爱都是刷流氓
     >   > 毛主席
@@ -160,7 +160,7 @@ ___
 ```
 {
     行内式：[一生一世](www.yishengyishi.com)当然不要真点
-    
+
     参数式：[百度]: www.baidu.com/ "我随便写的百度"
     我要点击百度[百度],不点击[百度],不想点击[百度]
 }
@@ -175,7 +175,7 @@ ___
 ##### 行内式
 ![我是图片](http://imgs2.iaweg.com/pic/HTTP3BpYy5wcHRiei5jb20vcHB0cGljLzIwMTUxMi8yMDE1MTIyNTY0NzUxOTc3LmpwZwloglog.jpg)
 
-Inline-style: 
+Inline-style:
 ![alt text](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png "Logo Title Text 1")
 
 ##### 参数式
@@ -188,11 +188,35 @@ Reference-style: ![logo]
 ```
 {
     行内式：![我是图片](http://imgs2.iaweg.com/pic/HTTP3BpYy5wcHRiei5jb20vcHB0cGljLzIwMTUxMi8yMDE1MTIyNTY0NzUxOTc3LmpwZwloglog.jpg)
-    
+
 }
 ```
+有颜色的代码块
+```javascript
+{
+  class CustomForm extends Component {
+    handleSubmit = () => {
+      console.log("Input Value: ", this.input.value)
+    }
+    render () {
+      return (
+        <form onSubmit={this.handleSubmit}>
+          <input
+            type='text'
+            ref={(input) => this.input = input} />
+          <button type='submit'>Submit</button>
+        </form>
+      )
+    }
+  }
 
-
+  // 格式 - 添加javascript
+  // ```编程语言名
+  // 代码内容  
+  // ```
+}
+```
+上面的代码中，可以添加javascript（也可用js），或者java、python等
 
 
 
@@ -238,7 +262,7 @@ yes|21|女
 ```
 ##### 第三种，
 学号|姓名|分数
--|-|-
+-|:-:|-
 1|小明|10
 2|小红|100
 3|小西|88
@@ -249,6 +273,8 @@ yes|21|女
     1|小明|10
     2|小红|100
     3|小西|88
+
+    // :-:是居中
 }
 ```
 ### 9、强调
@@ -297,3 +323,42 @@ __字体加粗__
 }
 ```
 
+
+### 12、文字（字体、颜色）
+```
+{
+
+  普通黑底的字体
+  <font face="黑体">我是黑体字</font>
+  <font face="微软雅黑">我是微软雅黑</font>
+  <font face="STCAIYUN">我是华文彩云</font>
+  <font color=#0099ff size=3 face="黑体">color=#0099ff size=3 face="黑体"</font>
+  <font color=#00ffff size=4>color=#00ffff size=4</font>
+  <font color=gray size=5>color=gray size=5</font>
+
+  // 背景颜色
+  <table><tr><td bgcolor=PowderBlue>这里的背景色是：PowderBlue，  十六进制颜色值： #B0E0E6，rgb(176, 224, 230)</td></tr></table>
+}
+```
+普通黑底的字体
+<font face="黑体">我是黑体字</font>
+<font face="微软雅黑">我是微软雅黑</font>
+<font face="STCAIYUN">我是华文彩云</font>
+<font color=#0099ff size=3 face="黑体">color=#0099ff size=3 face="黑体"</font>
+<font color=#00ffff size=4>color=#00ffff size=4</font>
+<font color=gray size=5>color=gray size=5</font>
+
+<table><tr><td bgcolor=PowderBlue>这里的背景色是：PowderBlue，  十六进制颜色值： #B0E0E6，rgb(176, 224, 230)</td></tr></table>
+
+```
+{
+  `文字高亮` ``文字高亮`` ```文字高亮```
+}
+```
+`文字高亮` ``文字高亮`` ```文字高亮```
+
+
+
+<br />
+<br />
+<br />
