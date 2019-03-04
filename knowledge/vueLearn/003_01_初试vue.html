@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>初试vue</title>
+    <meta http-equiv="Expires"/>
+</head>
+<body v-clock="">
+<div id="app">
+    <p>Hello {{ name }}</p>
+    <p v-if="greeting">greeting： {{ greeting }}</p>
+</div>
+<script src="vue.js"  ></script>
+<script>
+    let exampleData = {
+        name: "Vue.js",
+        greeting: true
+    };
+
+    let app = new Vue({
+        el:  "#app",
+        data: exampleData
+    });
+
+    // 直接修改app.name，可以修改视图；完全不需要修改dom，只需要数据驱动；
+
+</script>
+</body>
+</html>

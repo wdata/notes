@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+    <meta http-equiv="Expires"/>
+</head>
+<body v-clock="">
+<div id="app">
+    你好，{{ a }}
+</div>
+<script src="vue.js"></script>
+<script>
+
+    var data = {
+        a:'vue.js'
+    };
+    var vm = new Vue({
+        el: '#app',
+        data: data
+    });
+
+    vm.$watch("a",function(newVal, oldVal){
+        console.log("原来的值："+  oldVal + "现在的值：" + newVal)
+    })
+
+
+</script>
+</body>
+</html>

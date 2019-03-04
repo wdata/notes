@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>构造器Constructor与实例instance</title>
+    <meta http-equiv="Expires"/>
+</head>
+<body v-clock="">
+<div id="app">
+
+</div>
+<script src="vue.js"></script>
+<script>
+    // 构造器 Constructor
+    function Person(gender){
+        this.gender = gender;
+    }
+    Person.prototype.sayGender = function(){
+        document.write("this.gender："+  this.gender);
+    };
+
+    // 实例化
+    let person1 = new Person("男性");
+
+    // 实例
+    person1.sayGender();
+
+</script>
+</body>
+</html>

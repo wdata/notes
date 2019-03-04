@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue 2式侧边栏</title>
+    <meta http-equiv="Expires"/>
+    <style type="text/css">
+        #Header {
+            width: 360px;
+            height: 80px;
+            text-align: center;
+            line-height: 80px;
+            font-size: 15px;
+            color: #fffaf3;
+            font-weight: bold;
+            background-color: #f9c81e;
+        }
+
+        #Sidebar {
+            width: 120px;
+            float: left;
+            height: 280px;
+            text-align: center;
+            line-height: 280px;
+            font-size: 15px;
+            color: #ffffff;
+            font-weight: bold;
+            background-color: #cecece;
+        }
+
+        #body {
+            width: 240px;
+            height: 280px;
+            text-align: center;
+            line-height: 280px;
+            font-size: 15px;
+            color: #f9c81e;
+            font-weight: bold;
+            background-color: #fffaf3;
+            float: left;
+        }
+
+        #Footer {
+            width: 360px;
+            height: 80px;
+            text-align: center;
+            line-height: 80px;
+            font-size: 15px;
+            color: #fffaf3;
+            font-weight: bold;
+            background-color: #f9c81e;
+        }
+    </style>
+</head>
+<body v-clock="">
+<div id="app">
+    <app-header></app-header>
+    <app-sidebar></app-sidebar>
+    <app-body></app-body>
+    <div style="clear:both;"></div>
+    <app-footer></app-footer>
+</div>
+<script src="vue.js"></script>
+<script>
+    let appHeader = Vue.extend({
+        template: "<div id='Header'>上方列</div>"
+    });
+    let appSidebar = Vue.extend({
+        template: '<div id="Sidebar">侧边栏</div>'
+    });
+    let appBody = Vue.extend({
+        template: '<div id="Body">内容</div>'
+    });
+    let appFooter = Vue.extend({
+        template: '<div id="Footer">页尾资讯</div>'
+    });
+
+    // 注册
+    Vue.component("app-header",  appHeader);
+    Vue.component('app-sidebar', appSidebar);
+    Vue.component('app-body', appBody);
+    Vue.component('app-footer', appFooter);
+
+
+    new Vue({
+        el: '#app'
+    })
+
+</script>
+</body>
+</html>

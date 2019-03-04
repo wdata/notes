@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue组件化</title>
+    <meta http-equiv="Expires"/>
+</head>
+<body v-clock="">
+<div id="app">
+    <app-nav></app-nav>
+    <app-view>
+    </app-view>
+</div>
+<script src="vue.js"></script>
+<script>
+    // 定义
+    let appNav = Vue.extend({
+        template: "<div>appNav</div>"
+    });
+    let appView = Vue.extend({
+        template: `<app-sidebar></app-sidebar>`
+    });
+    let appSidebar = Vue.extend({
+        template: "<div>appSidebar <app-content></app-content></div>"
+    });
+    let appContent = Vue.extend({
+        template: "<div>appContent</div>"
+    });
+
+    // 注册
+    Vue.component("app-nav", appNav);
+    Vue.component("app-view", appView);
+    Vue.component("app-sidebar", appSidebar);
+    Vue.component("app-content", appContent);
+
+    // 创建实例
+    new Vue({
+        el: "#app"
+    })
+</script>
+</body>
+</html>

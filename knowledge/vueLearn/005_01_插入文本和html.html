@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue</title>
+    <meta http-equiv="Expires"/>
+</head>
+<body v-clock="">
+<div id="app">
+
+    <div :id = "msg">
+        <span :id=msg+"-id">Message: {{ msg }}</span>
+        <input type="text" v-model="msg" placeholder="this is msg">
+    </div>
+    <br>
+    <div>
+        <span  v-once>This will never change: {{ msg1 }}</span>
+        <input type="text" v-model="msg1" placeholder="this is msg1">
+    </div>
+    <div>
+        <div v-html="raw_html"></div>
+        <hr>
+        <div>{{ raw_html }}</div>
+    </div>
+</div>
+<script src="vue.js"></script>
+<script>
+    /*
+    *   单项绑定使用：{{ msg }}
+    *   单次渲染使用：v-onec
+    *   双向绑定：v-model="msg"
+    *   插入html：v-html="msg"
+    * */
+
+
+
+    new Vue({
+        el: '#app',
+        data: {
+            msg: 'H',
+            msg1: 'Hello Vue.js!',
+            raw_html: '<img hidefocus="true" src="http://www.baidu.com/img/bd_logo1.png" width="270" height="129">',
+        }
+    })
+</script>
+</body>
+</html>
