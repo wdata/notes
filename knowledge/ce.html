@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+  var string= 'test';
+  document.write('<scr' + 'ipt>console.log(string); arrFun([1]); console.log(num);  </' + 'script>');
+</script>
+<script>
+  var num = 456;
+  function arrFun(arr) {
+    if (arr instanceof Array) {
+      console.log('IS ARRAY!');
+    } else {
+      console.log('NOT  ARRAY!');
+    };
+  };
+  arrFun(string);
+  arrFun([string])
+</script>
+</body>
+</html>
