@@ -333,5 +333,32 @@
 
   # 清除+還原
   $ git checkout . && git clean -xdf
+
+}
+```
+十一、ssh
+```python
+{
+  # 输入ls -al ~/.ssh以查看是否存在现有SSH密钥：
+  $ ls -al ~/.ssh
+
+  # 测试SSH连接
+  $ ssh -T git@github.com
+  # 成功 Hi wdata! You've successfully authenticated, but GitHub does not provide shell access.
+  # 失败 The authenticity of host 'github.com (IP ADDRESS)' can't be established.
+
+
+  # 粘贴下面的文本，替换您的GitHub电子邮件地址。
+  $ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
+
+  # 这将使用提供的电子邮件作为标签创建一个新的ssh密钥。
+  > Generating public/private rsa key pair.
+
+  # 当系统提示您“输入要保存密钥的文件”时，按Enter键。这接受默认文件位置
+  > Enter a file in which to save the key (/c/Users/you/.ssh/id_rsa):[Press enter]
+
+  # 在提示符下，键入安全密码。有关更多信息
+  > Enter passphrase (empty for no passphrase): [Type a passphrase]
+  > Enter same passphrase again: [Type passphrase again]
 }
 ```
