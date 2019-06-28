@@ -172,6 +172,11 @@
 
   # 新建一个分支，指向某个tag
   $ git checkout -b [branch] [tag]
+  
+  # 提交标签示例
+  git tag -a M20190619 -m "M20190619"
+  git push origin M20190619
+
 }
 ```
 
@@ -360,5 +365,6 @@
   # 在提示符下，键入安全密码。有关更多信息
   > Enter passphrase (empty for no passphrase): [Type a passphrase]
   > Enter same passphrase again: [Type passphrase again]
+  
 }
 ```
