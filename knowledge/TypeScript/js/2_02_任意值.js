@@ -1,0 +1,10 @@
+"use strict";
+let str2 = 'serve';
+let str3 = 'serve';
+str3 = 1;
+let anyThing = 'hello';
+console.log(anyThing.myName);
+console.log(anyThing.firstName);
+let something;
+something = 'seven';
+something = 8;
