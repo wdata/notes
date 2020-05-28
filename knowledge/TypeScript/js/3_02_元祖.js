@@ -1,0 +1,10 @@
+"use strict";
+let tom_1 = ['Tom', 123];
+let tom_2;
+tom_2[0] = 'Tom';
+tom_2[1] = 12;
+tom_2[0].slice(1);
+tom_2[1].toFixed(2);
+let tom_3;
+tom_3 = ['tom', 1];
+tom_3.push(1);
