@@ -1,8 +1,15 @@
 import Vue from 'vue'
-import App from './App.vue'
-
+import App from './App'
+// import router from './router'
 Vue.config.productionTip = false
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+document.addEventListener('deviceready', function() {
+    new Vue({
+        el: '#app',
+        // router,
+        // store,
+        template: '<App/>',
+        components: { App }
+    })
+    window.navigator.splashscreen.hide()
+}, false);
