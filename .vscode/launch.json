@@ -1,3 +1,35 @@
+
+/**
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ GO!", // 配置启动名称(我随便取了一个)
+      "type": "cppdbg",
+      "request": "launch", // 请求配置类型，可以为launch（启动）或attach（附加）
+      "program": "${fileDirname}/${fileBasenameNoExtension}.exe", // 必须和tasks.json里的args "-o"参数后面的参数一致
+      "args": [], // main函数没有使用参数的话，为空即可
+      "stopAtEntry": false, // 程序是否暂停在入口，不要，手动打断点吧
+      "cwd": "${workspaceFolder}", // 源文件的工作目录
+      "environment": [], // 环境变量，空着即可
+      "externalConsole": true, // 是否使用外部控制台
+      "internalConsoleOptions": "neverOpen", // 是否输入gdb命令
+      "MIMode": "gdb", // 指定连接的调试器，minGW用gdb吧
+      "miDebuggerPath": "D:/software/mingw64/bin/gdb.exe", // 调试器存放位置
+      "setupCommands": [
+        {
+          "description": "Enable pretty-printing for gdb",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": false
+        }
+      ],
+      "preLaunchTask": "Compile" // 必须和tasks.json的label相同
+    }
+  ]
+}
+**/
+
+
 // https://code.visualstudio.com/docs/cpp/launch-json-reference
 {
   "version": "0.2.0",
