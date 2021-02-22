@@ -28,6 +28,23 @@ module.exports = {
       {
         test: /.less$/,
         use: ['style-loader', 'css-loader', 'less-loader']
+      },
+      {
+        test: /.(png|jpg|gif|jpeg)$/,
+        // 可用url-loader | file-loader
+        use: [
+          {
+            loader: 'url-loader',
+            // 如果大小小于此，转换为base64
+            options: {
+              limit: 102400
+            }
+          }
+        ]
+      },
+      {
+        test: /.(woff|woff2|eot|ttf|otf)$/,
+        use: 'file-loader'
       }
     ]
   }
