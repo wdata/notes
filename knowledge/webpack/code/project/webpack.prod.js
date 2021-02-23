@@ -1,8 +1,9 @@
 'use strict'
 
 const path = require('path')
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin') // 分离css文件
+const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin') // css 压缩
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
   // 入口，字符串时为单入口，对象时为多入口
@@ -79,6 +80,35 @@ module.exports = {
     new OptimizeCssAssetsWebpackPlugin({
       assetNameRegExp: /\.css$/g,
       cssProcessor: require('cssnano')
+    }),
+    // 一个页面，对应一个配置
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src/index.html'), // 模版位置
+      filename: 'index.html', // 指定打包出来的文件名称
+      chunks: ['index.js'], // 生成的指定的chunks
+      inject: true,
+      minify: {
+        html5: true,
+        collapseWhitespace: true,
+        preserveLineBreaks: true,
+        minifyCSS: true,
+        minifyJS: true,
+        reomveComments: false
+      }
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src/search.html'), // 模版位置
+      filename: 'search.html', // 指定打包出来的文件名称
+      chunks: ['search.js'], // 生成的指定的chunks
+      inject: true,
+      minify: {
+        html5: true,
+        collapseWhitespace: true,
+        preserveLineBreaks: true,
+        minifyCSS: true,
+        minifyJS: true,
+        reomveComments: false
+      }
     })
   ]
 }
