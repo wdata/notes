@@ -90,10 +90,10 @@ module.exports = {
       minify: {
         html5: true,
         collapseWhitespace: true,
-        preserveLineBreaks: true,
+        preserveLineBreaks: false,
         minifyCSS: true,
         minifyJS: true,
-        reomveComments: false
+        removeComments: false
       }
     }),
     new HtmlWebpackPlugin({
@@ -104,10 +104,10 @@ module.exports = {
       minify: {
         html5: true,
         collapseWhitespace: true,
-        preserveLineBreaks: true,
+        preserveLineBreaks: false,
         minifyCSS: true,
         minifyJS: true,
-        reomveComments: false
+        removeComments: false
       }
     })
   ]
