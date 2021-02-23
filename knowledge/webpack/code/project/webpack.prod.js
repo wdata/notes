@@ -85,7 +85,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src/index.html'), // 模版位置
       filename: 'index.html', // 指定打包出来的文件名称
-      chunks: ['index.js'], // 生成的指定的chunks
+      chunks: ['index'], // 生成的指定的chunks
       inject: true,
       minify: {
         html5: true,
@@ -99,7 +99,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'src/search.html'), // 模版位置
       filename: 'search.html', // 指定打包出来的文件名称
-      chunks: ['search.js'], // 生成的指定的chunks
+      chunks: ['search'], // 生成的指定的chunks
       inject: true,
       minify: {
         html5: true,
