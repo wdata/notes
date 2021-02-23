@@ -1,7 +1,7 @@
 'use strict'
 
 const path = require('path')
-const webpack = require('webpack')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   // 入口，字符串时为单入口，对象时为多入口
@@ -10,10 +10,10 @@ module.exports = {
     index: './src/index.js',
     search: './src/search.js'
   },
-  //
   output: {
     path: path.join(__dirname, 'dist'),
-    filename: '[name]_[chunkhash:8].js'
+    filename: '[name]_[chunkhash:8].js',
+    publicPath: './'
   },
   mode: 'production', // 生产
   module: {
@@ -24,11 +24,15 @@ module.exports = {
       },
       {
         test: /.css$/,
-        use: ['style-loader', 'css-loader']
+        // use: ['style-loader', 'css-loader']
+        // MiniCssExtractPlugin 与 style.loader 互斥
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
       },
       {
         test: /.less$/,
-        use: ['style-loader', 'css-loader', 'less-loader']
+        // use: ['style-loader', 'css-loader', 'less-loader']
+        // MiniCssExtractPlugin 与 style.loader 互斥
+        use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
       },
       {
         test: /.(png|jpg|gif|jpeg)$/,
@@ -66,5 +70,10 @@ module.exports = {
         ]
       }
     ]
-  }
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name]_[contenthash:8].css'
+    })
+  ]
 }
