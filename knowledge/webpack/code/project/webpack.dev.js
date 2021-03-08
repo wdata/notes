@@ -2,6 +2,7 @@
 
 const path = require('path')
 const webpack = require('webpack')
+const CleanWebpackPlugin = require('clean-webpack-plugin') // 自动清理output输出目录
 
 module.exports = {
   // 入口，字符串时为单入口，对象时为多入口
@@ -51,7 +52,7 @@ module.exports = {
     ]
   },
   // 引入webpack自带的插件
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  plugins: [new webpack.HotModuleReplacementPlugin(), new CleanWebpackPlugin()],
   // webpack-dev-server 配置
   devServer: {
     contentBase: './dist', // 指定目录

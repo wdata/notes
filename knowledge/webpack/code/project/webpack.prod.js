@@ -3,7 +3,8 @@
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin') // 分离css文件
 const OptimizeCssAssetsWebpackPlugin = require('optimize-css-assets-webpack-plugin') // css 压缩
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin') // 配置html页面
+const { CleanWebpackPlugin } = require('clean-webpack-plugin') // 自动清理output输出目录
 
 module.exports = {
   // 入口，字符串时为单入口，对象时为多入口
@@ -34,7 +35,23 @@ module.exports = {
         test: /.less$/,
         // use: ['style-loader', 'css-loader', 'less-loader']
         // MiniCssExtractPlugin 与 style.loader 互斥
-        use: [MiniCssExtractPlugin.loader, 'css-loader', 'less-loader']
+        use: [
+          MiniCssExtractPlugin.loader,
+          'css-loader',
+          'less-loader',
+          {
+            loader: 'postcss-loader'
+            // 为什么不这样写，要添加postcss.config.js，因为会报错，版本不兼容
+            // options: {
+            //   plugins: () => {
+            //     require('autoprefixer')({
+            //       // 可选择兼容版本
+            //       browsers: ['last 2 version', '>1%', 'ios 7']
+            //     })
+            //   }
+            // }
+          }
+        ]
       },
       {
         test: /.(png|jpg|gif|jpeg)$/,
@@ -109,6 +126,7 @@ module.exports = {
         minifyJS: true,
         removeComments: false
       }
-    })
+    }),
+    new CleanWebpackPlugin()
   ]
 }
