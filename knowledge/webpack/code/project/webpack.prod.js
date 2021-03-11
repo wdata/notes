@@ -38,26 +38,27 @@ module.exports = {
         use: [
           MiniCssExtractPlugin.loader,
           'css-loader',
-          'less-loader',
-          {
-            loader: 'postcss-loader'
-            // 为什么不这样写，要添加postcss.config.js，因为会报错，版本不兼容
-            // options: {
-            //   plugins: () => {
-            //     require('autoprefixer')({
-            //       // 可选择兼容版本
-            //       browsers: ['last 2 version', '>1%', 'ios 7']
-            //     })
-            //   }
-            // }
-          },
           {
             loader: 'px2rem-loader',
             options: {
               remUnit: 75, // rem 相对于转换的px单位 1rem = 75px
-              remPrecesion: 8 // px 转换成rem小数点位数
+              remPrecision: 8 // px 转换成rem小数点位数
             }
-          }
+          },
+          'postcss-loader',
+          'less-loader'
+          // {
+          //   loader: 'postcss-loader',
+          //   // 为什么不这样写，要添加postcss.config.js，因为会报错，版本不兼容
+          //   options: {
+          //     plugins: () => {
+          //       require('autoprefixer')({
+          //         // 可选择兼容版本
+          //         browsers: ['last 2 version', '>1%', 'ios 7']
+          //       })
+          //     }
+          //   }
+          // },
         ]
       },
       {
