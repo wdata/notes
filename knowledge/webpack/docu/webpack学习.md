@@ -135,7 +135,7 @@
 
 1. raw-loader@0.5.1 - 内联html和js
 2. style-loader 将css挂载到HTML中
-3. html-inline-css-webpack-plugin - 为html引入外部资源；生成创建html入口文件
+3. html-inline-css-webpack-plugin
 
 ```js
 {
@@ -147,7 +147,7 @@
   <script>
     ${ require('raw-loader!babel-loader!../node_modules/lib-flexible/flexible.js') }
   </script>
-  // 实际的方法，原因：html-inline-css-webpack-plugin的解析语法发生改变
+  // 实际的方法，原因：htmlwebpack-plugin的解析语法发生改变
   <%= require('raw-loader!./meta.html') %>
   <%= require('raw-loader!babel-loader!../node_modules/lib-flexible/flexible.js') %>
 
@@ -163,6 +163,75 @@
         }
       }
     ]
+  }
+}
+```
+
+### 3.5 多页面应用
+
+每个页面对应entry，一个html-webpack-plugin
+
+插件：
+
+1. glob - 正则匹配文件，并返回文件，可对文件进行操作
+
+```js
+{
+  // 固定的入口文件位置
+  module.exports = {
+    entry: {
+      index: './src/index.js',
+      search: './src/search.js'
+    },
+  }
+  // 通过glob拿取文件
+  entry: glob.sync(path.join(_dirname, './src/*/index.js'))
+
+  const setMPA = () => {
+    const entry = {}
+    const htmlWebpackPlugins = []
+    // 拿到文件
+    const entryFiles = glob.sync(path.join(__dirname, './src/*/index.js'))
+
+    Object.keys(entryFiles).map((index) => {
+      // 例如：E:/HTML/Github/notes/knowledge/webpack/code/project/src/search/index.js
+      const entryFile = entryFiles[index]
+
+      const match = entryFile.match(/src\/(.*)\/index\.js/)
+      const pageName = match && match[1]
+
+      entry[pageName] = entryFile
+
+      htmlWebpackPlugins.push(
+        new HtmlWebpackPlugin({
+          template: path.join(__dirname, `src/${pageName}/index.html`), // 模版位置
+          filename: `${pageName}.html`, // 指定打包出来的文件名称
+          chunks: [pageName], // 生成的指定的chunks
+          inject: true,
+          minify: {
+            html5: true,
+            collapseWhitespace: true,
+            preserveLineBreaks: false,
+            minifyCSS: true,
+            minifyJS: true,
+            removeComments: false
+          }
+        })
+      )
+    })
+
+    return {
+      entry,
+      htmlWebpackPlugins
+    }
+  }
+  
+  // 使用
+  const { entry, htmlWebpackPlugins } = setMPA()
+  // webpack配置
+  module.exports = {
+    entry: entry,
+    plugins: [].concat(htmlWebpackPlugins)
   }
 }
 ```
