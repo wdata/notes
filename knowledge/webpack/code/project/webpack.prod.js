@@ -50,6 +50,13 @@ module.exports = {
             //     })
             //   }
             // }
+          },
+          {
+            loader: 'px2rem-loader',
+            options: {
+              remUnit: 75, // rem 相对于转换的px单位 1rem = 75px
+              remPrecesion: 8 // px 转换成rem小数点位数
+            }
           }
         ]
       },
