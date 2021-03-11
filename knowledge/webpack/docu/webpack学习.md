@@ -90,7 +90,7 @@
 }
 ```
 
-### 3.3 3、px转rem
+### 3.3 px转rem
 
 原理：
 
@@ -100,7 +100,7 @@
 插件：
 
 1. px2rem-loader - 转换rem
-2. lib-flexible - 渲染时计算根元素font-size值
+2. lib-flexible - 渲染时计算根元素font-size值，**不能被压缩，需放在.html中**
 
 坑：**px2rem-loader必须在less-loader之前**。
 原因：px2rem-loader 不支持嵌套结构，webpack - use的执行顺序是从右往左方向；
@@ -115,6 +115,54 @@
       remUnit: 75, // rem 相对于转换的px单位 1rem = 75px
       remPrecision: 8 // px 转换成rem小数点位数
     }
+  }
+}
+```
+
+### 3.4 静态资源内联
+
+代码层面：
+
+1. 页面框架的初始化脚本
+2. 上报相关打点
+3. css内联比吗页面闪动
+
+请求层面：减少HTTP网络请求数
+
+1. 小图片或字体内联（url-loader）
+
+插件：
+
+1. raw-loader@0.5.1 - 内联html和js
+2. style-loader 将css挂载到HTML中
+3. html-inline-css-webpack-plugin - 为html引入外部资源；生成创建html入口文件
+
+```js
+{
+  // 1、raw-loader
+  // 原webpack视频中的方法
+  // 添加meta
+  ${ require('raw-loader!./meta.html') }
+  // 添加文件自适应
+  <script>
+    ${ require('raw-loader!babel-loader!../node_modules/lib-flexible/flexible.js') }
+  </script>
+  // 实际的方法，原因：html-inline-css-webpack-plugin的解析语法发生改变
+  <%= require('raw-loader!./meta.html') %>
+  <%= require('raw-loader!babel-loader!../node_modules/lib-flexible/flexible.js') %>
+
+
+  // 2、style-loader 可用配置
+  {
+    'use': [
+      {
+        loader: 'style-loader',
+        options: {
+          insertAt: 'top', // 样式插入到 <head>
+          singleton: true, // 将所有的style标签合并成一个
+        }
+      }
+    ]
   }
 }
 ```

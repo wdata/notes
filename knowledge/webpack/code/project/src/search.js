@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import './search.less'
 import yangchaoyue from './assets/img/yangchaoyue.jpg'
-import 'lib-flexible'
+// import 'lib-flexible'
 // import './search.css';
 
 class Search extends React.Component {
