@@ -184,7 +184,7 @@
       search: './src/search.js'
     },
   }
-  // 通过glob拿取文件
+  // 核心 - 通过glob拿取文件
   entry: glob.sync(path.join(_dirname, './src/*/index.js'))
 
   const setMPA = () => {
@@ -233,5 +233,28 @@
     entry: entry,
     plugins: [].concat(htmlWebpackPlugins)
   }
+}
+```
+
+### 3.6 使用source map
+
+通过 source map 定位到源代码
+
+[source map科普⽂](http://www.ruanyifeng.com/blog/2013/01/javascript_source_map.html)
+
+开发环境开启，线上环境关闭
+
+线上排查问题的时候可以将 sourcemap 上传到错误监控系统
+
+```text
+{
+  eval: 使⽤eval包裹模块代码
+  source-map: 产⽣.map⽂件
+  cheap: 不包含列信息
+  inline: 将.map作为DataURI嵌⼊，不单独⽣成.map⽂件
+  module:包含loader的sourcemap
+
+  使用，在webpack添加：
+  devtool: 'source-map' 配置等
 }
 ```

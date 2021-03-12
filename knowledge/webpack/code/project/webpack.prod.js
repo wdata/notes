@@ -57,7 +57,7 @@ module.exports = {
     filename: '[name]_[chunkhash:8].js',
     publicPath: './'
   },
-  mode: 'production', // 生产
+  mode: 'none', // 生产
   module: {
     rules: [
       {
@@ -146,5 +146,7 @@ module.exports = {
       cssProcessor: require('cssnano')
     }),
     new CleanWebpackPlugin()
-  ].concat(htmlWebpackPlugins)
+  ].concat(htmlWebpackPlugins),
+  // source map 配置
+  devtool: 'inline-source-map'
 }
