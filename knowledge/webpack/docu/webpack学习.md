@@ -258,3 +258,44 @@
   devtool: 'source-map' 配置等
 }
 ```
+
+### 3.7 提取公共资源
+
+思路：将 react、react-dom 基础包通过 cdn 引⼊，不打⼊ bundle 中
+
+插件：
+
+1. html-webpackexternals-plugin - 基本库分离
+2. splitChunksPlugin - 公共脚本分离 [文档](https://webpack.docschina.org/plugins/split-chunks-plugin/)
+
+```js
+{
+  // splitChunksPlugin 配置
+  module.exports = {
+    optimization: {
+      splitChunks: {
+        /**
+        chunks 参数说明：
+          async 异步引⼊的库进⾏分离(默认)
+          initial 同步引⼊的库进⾏分离
+          all 所有引⼊的库进⾏分离(推荐)
+         **/
+        chunks: 'async',
+        minSize: 30000, // 公共包最小大小
+        maxSize: 0,
+        minChunks: 1,
+        maxAsyncRequests: 5,
+        maxInitialRequests: 3,
+        automaticNameDelimiter: '~',
+        name: true,
+        cacheGroups: {
+          vendors: {
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10
+          }
+        }
+      }
+    }
+  };
+}
+```
