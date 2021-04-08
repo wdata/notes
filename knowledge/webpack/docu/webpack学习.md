@@ -631,3 +631,36 @@ uglify 阶段被擦除掉。
 3. import binding 是 immutable的
 
 代码擦除： uglify 阶段删除⽆⽤代码
+
+### 3.9 scope hoisting
+
+#### 问题
+
+现象：构建后的代码存在⼤量闭包代码
+
+![问题](./static/scope-hoisting-1.png)
+
+⼤量作⽤域包裹代码，导致体积增⼤（模块越多越明显）
+
+运⾏代码时创建的函数作⽤域变多，内存开销变⼤
+
+#### 模块转换分析
+
+![问题](./static/scope-hoisting-2.png)
+
+#### 进⼀步分析 webpack 的模块机制
+
+![问题](./static/scope-hoisting-3.png)
+
+#### scope hoisting 原理
+
+原理：将所有模块的代码按照引⽤顺序放在⼀个函数作⽤域⾥，然后适当的重命名⼀
+些变量以防⽌变量名冲突
+
+对⽐: 通过 scope hoisting 可以减少函数声明代码和内存开销
+
+#### 使用
+
+webpack mode 为 production 默认开启
+
+必须是 ES6 语法，CJS 不⽀持
