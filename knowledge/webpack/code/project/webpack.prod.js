@@ -57,7 +57,7 @@ module.exports = {
     filename: '[name]_[chunkhash:8].js',
     publicPath: './'
   },
-  mode: 'none', // 生产
+  mode: 'production', // 生产
   module: {
     rules: [
       {
