@@ -12,27 +12,333 @@
 
 ## 第一章-简介
 
+### 为什么需要构建工具
+
+1. 转换ES6语法
+2. 转换 JSX
+3. CSS 前缀补全/预处理器
+4. 压缩混淆
+5. 图⽚压缩
+
+### 为什么选择webpack
+
+社区⽣态丰富
+配置灵活和插件化扩展
+官⽅更新迭代速度快
+
+### webpack 配置组成
+
+```js
+{
+  module.exports = {
+    // 打包的⼊⼝⽂件
+    entry: './src/index.js',
+    // 打包的输出
+    output: './dist/main.js',
+    // 环境
+    mode: 'production',
+    module: {
+      // Loader 配置
+      rules: [{ 
+        test: /\.txt$/,
+        use: 'raw-loader'
+      }]
+    },
+    // 插件配置
+    plugins: [
+      new HtmlwebpackPlugin({
+        template: './src/index.html’
+      })
+    ]
+  };
+}
+```
+
+### 环境搭建：安装Node.js 和 NPM
+
+1、安装 [nvm](https://github.com/nvm-sh/nvm)
+
+```text
+{
+  1. 通过 curl 安装：curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+  2. 通过 wget 安装：wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
+}
+```
+
+2、安装 Node.js 和 NPM
+
+```text
+{
+  1. nvm install v10.15.3
+  2. 检查是否安装成功：node -v, npm -v
+}
+```
+
+3、安装 webpack 和 webpack-cli
+3.1、创建空⽬录和 package.json
+3.2、安装 webpack 和 webpack-cli 
+3.3、检查是否安装成功：./node_modules/.bin/webpack -v
+
 ## 第二章-基础用法
 
 ### 2.1 entry
 
+Entry ⽤来指定 webpack 的打包⼊⼝
+
+```js
+{
+  // 单⼊⼝
+  module.exports = {
+    entry: './path/to/my/entry/file.js'
+  };
+
+  // 多⼊⼝
+  module.exports = {
+    entry: {
+      app: './src/app.js',
+      adminApp: './src/adminApp.js'
+    }
+  };
+}
+```
+
 ### 2.2 output
+
+Output ⽤来告诉 webpack 如何将编译后的⽂件输出到磁盘
+
+```js
+{
+  // 单⼊⼝
+  module.exports = {
+    output: {
+      filename: 'bundle.js’,
+      path: __dirname + '/dist'
+    }
+  };
+
+  // 多⼊⼝
+  module.exports = {
+    output: {
+      filename: '[name].js',
+      path: __dirname + '/dist'
+    }
+  };
+}
+```
 
 ### 2.3 loaders
 
-### 2.4 mode
+webpack 开箱即用只支持 JS 和 JSON 两种文件类型，通过 Loaders 去支持其它文
+件类型并且把它们转化成有效的模块，并且可以添加到依赖图中。
 
-### 2.5 解析ES6和React
+常见的Loaders：
+![常见的Loaders](./static/loaders.png)
 
-### 2.6 解析图片和字体
+```js
+{
+  module.exports = {
+    module: {
+      rules: [{
+        // test 指定匹配规则
+        test: /\.txt$/,
+        // use 指定使⽤的 loader 名称
+        use: 'raw-loader'
+      }]
+    }
+  };
+}
+```
 
-### 2.7 文件监听
+### 2.6 plugins
 
-### 2.8 热更新
+插件⽤于 bundle ⽂件的优化，资源管理和环境变量注⼊
+作⽤于整个构建过程
 
-### 2.1 文件指纹
+常见的Loaders：
+![常见的plugins](./static/plugins.png)
 
-### 2.1 压缩
+```js
+{
+  module.exports = {
+    plugins: [
+      // 放入 plugins中
+      new HtmlWebpackPlugin({
+        template: './src/index.html'
+      })
+    ]
+  };
+}
+```
+
+### 2.5 mode
+
+Mode ⽤来指定当前的构建环境是：production、development 还是 none
+设置 mode 可以使⽤ webpack 内置的函数，默认值为 production
+
+![mode的内置函数功能](./static/mode.png)
+
+### 2.6 解析ES6和React
+
+```js
+{ 
+  // 资源解析：ES6
+  // 使⽤ babel-loader babel的配置⽂件是：.babelrc
+  module.exports = {
+    module: {
+      rules: [{
+        test: /\.js$/,
+        use: 'babel-loader'
+      }]
+    }
+  };
+
+  // 资源解析：增加ES6的babel preset配置
+  {
+    "presets": [
+      "@babel/preset-env”
+    ],
+    "plugins": [
+      "@babel/proposal-class-properties"
+    ]
+  }
+
+  // 资源解析：解析 React JSX
+  {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ],
+    "plugins": [
+      "@babel/proposal-class-properties"
+    ]
+  }
+
+  // 资源解析：解析 CSS + 解析 Less 和 SaSS
+  const MiniCssExtractPlugin = require('mini-css-extract-plugin') // 分离css文件
+  module.exports = {
+    module: {
+      rules: [{
+          test: /.css$/,
+          // use: ['style-loader', 'css-loader']
+          // MiniCssExtractPlugin 与 style.loader 互斥
+          use: [MiniCssExtractPlugin.loader, 'css-loader']
+        },
+        {
+          test: /.less$/,
+          // use: ['style-loader', 'css-loader', 'less-loader']
+          // MiniCssExtractPlugin 与 style.loader 互斥
+          use: [
+            MiniCssExtractPlugin.loader,
+            'css-loader',
+            {
+              loader: 'px2rem-loader',
+              options: {
+                remUnit: 75, // rem 相对于转换的px单位 1rem = 75px
+                remPrecision: 8 // px 转换成rem小数点位数
+              }
+            },
+            'postcss-loader',
+            'less-loader'
+            // {
+            //   loader: 'postcss-loader',
+            //   // 为什么不这样写，要添加postcss.config.js，因为会报错，版本不兼容
+            //   options: {
+            //     plugins: () => {
+            //       require('autoprefixer')({
+            //         // 可选择兼容版本
+            //         browsers: ['last 2 version', '>1%', 'ios 7']
+            //       })
+            //     }
+            //   }
+            // },
+          ]
+        },
+      ]
+    }
+  };
+}
+```
+
+### 2.7 解析图片和字体
+
+```js
+{
+  // 解析图⽚
+    {
+    test: /.(png|jpg|gif|jpeg)$/,
+    // 文件指纹
+    use: [
+      {
+        loader: 'file-loader',
+        options: {
+          name: '[name]_[hash:8].[ext]'
+        }
+      }
+    ]
+  }
+
+  // 资源解析：解析字体
+  {
+    test: /.(woff|woff2|eot|ttf|otf)$/,
+    // use: 'file-loader'
+    use: [
+      {
+        loader: 'file-loader',
+        options: {
+          name: '[name]_[hash:8].[ext]'
+        }
+      }
+    ]
+  }
+}
+```
+
+### 2.8 文件监听
+
+⽂件监听是在发现源码发⽣变化时，⾃动重新构建出新的输出⽂件。
+
+插件：
+
+1. webpack-dev-server
+
+### 2.9 热更新
+
+插件:
+
+1. webpack-dev-middleware
+
+热更新原理：
+![热更新原理](./static/bundle.png)
+
+### 2.10 文件指纹
+
+打包后输出的⽂件名的后缀
+
+如何生成：
+
+1. Hash：和整个项⽬的构建相关，只要项⽬⽂件有修改，整个项⽬构建的 hash 值就会更改
+2. Chunkhash：和 webpack 打包的 chunk 有关，不同的 entry 会⽣成不同的 chunkhash 值
+3. Contenthash：根据⽂件内容来定义 hash ，⽂件内容不变，则 contenthash 不变
+
+![热更新原理](./static/file-loader.png)
+
+```js
+{
+  // 生成8位数哈西
+  // JS+CSS+图片
+  '[name]_[hash:8].[ext]'
+  '[name]_[chunkhash:8].js'
+  '[name]_[Contenthash:8].[ext]'
+}
+```
+
+### 2.11 压缩
+
+插件：
+
+1. 内置插件：uglifyjs-webpack-plugin
+2. CSS文件压缩：optimize-css-assets-webpack-plugin
+3. html ⽂件的压缩：html-webpack-plugin
 
 ## 第三章-进阶用法
 
@@ -299,3 +605,29 @@
   };
 }
 ```
+
+### 3.8 Tree Shaking(摇树优化)
+
+#### 概念
+
+概念：1 个模块可能有多个⽅法，只要其中的某个⽅法使⽤到了，则整个⽂件都会被打到
+bundle ⾥⾯去，tree shaking 就是只把⽤到的⽅法打⼊ bundle ，没⽤到的⽅法会在
+uglify 阶段被擦除掉。
+使⽤：webpack 默认⽀持，在 .babelrc ⾥设置 modules: false 即可
+要求：必须是 ES6 的语法，CJS 的⽅式不⽀持
+
+#### DCE (Dead code elimination)：
+
+1. 代码执⾏的结果不会被⽤到
+2. 代码不会被执⾏，不可到达
+3. 代码只会影响死变量（只写不读）
+
+#### Tree-shaking 原理
+
+利⽤ ES6 模块的特点:
+
+1. 只能作为模块顶层的语句出现
+2. import 的模块名只能是字符串常量
+3. import binding 是 immutable的
+
+代码擦除： uglify 阶段删除⽆⽤代码
