@@ -664,3 +664,30 @@ uglify 阶段被擦除掉。
 webpack mode 为 production 默认开启
 
 必须是 ES6 语法，CJS 不⽀持
+
+### 3.10、代码分割的意义
+
+对于⼤的 Web 应⽤来讲，将所有的代码都放在⼀个⽂件中显然是不够有效的，特别是当你的
+某些代码块是在某些特殊的时候才会被使⽤到。webpack 有⼀个功能就是将你的代码库分割成
+chunks（语块），当代码运⾏到需要它们的时候再进⾏加载。
+
+适⽤的场景：
+
+1. 抽离相同代码到⼀个共享块
+2. 脚本懒加载，使得初始下载的代码更⼩
+
+方式：
+
+1. CommonJS：require.ensure
+2. **ES6：动态 import**（⽬前还没有原⽣⽀持，需要 babel 转换）
+
+```js
+{
+  // 1、动态import
+  // 安装babel插件
+  npm install @babel/plugin-syntax-dynamic-import --save-dev
+
+  // ES6：动态 import
+  "plugins": ["@babel/plugin-syntax-dynamic-import"]
+}
+```
