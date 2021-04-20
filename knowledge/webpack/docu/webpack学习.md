@@ -749,3 +749,92 @@ ESLint 如何执⾏落地？
   }
 }
 ```
+
+### 3.12、webpack 打包库和组件
+
+webpack 除了可以⽤来打包应⽤，也可以⽤来打包 js 库
+
+#### 实现⼀个⼤整数加法库的打包
+
+1. 需要打包压缩版和⾮压缩版本
+2. ⽀持 AMD/CJS/ESM 模块引⼊
+
+#### 库的⽬录结构和打包要求
+
+打包输出的库名称:
+·未压缩版 large-number.js
+·压缩版 large-number.min.js
+
+```cmd
+{
+  /dist
+    large-number.js
+    large-number.min.js
+  webpack.config.js
+  package.json
+  index.js
+  /src
+    index.js
+}
+```
+
+#### ⽀持的使⽤⽅式
+
+```js
+{
+  // ⽀持 CJS
+  import * as largeNumber from 'large-number';
+  // ...
+  largeNumber.add('999', '1');
+
+  // ⽀持 ES module
+  const largeNumbers = require('large-number');
+  // ...
+  largeNumber.add('999', '1');
+
+  // ⽀持 AMD
+  require(['large-number'], function (large-number) {
+  // ...
+  largeNumber.add('999', '1');
+  });
+
+  // 可以直接通过 script 引⼊
+  <script src="https://unpkg.com/large-number"></script>
+}
+```
+
+#### 如何将库暴露出去？
+
+```js
+{
+  // library: 指定库的全局变量
+  // libraryTarget: ⽀持库引⼊的⽅式
+
+  module.exports = {
+    mode: "production",
+    entry: {
+      "large-number": "./src/index.js",
+      "large-number.min": "./src/index.js"
+    },
+    output: {
+      filename: "[name].js",
+      library: "largeNumber",
+      libraryExport: "default",
+      libraryTarget: "umd"
+    }
+  };
+}
+```
+
+#### 设置⼊⼝⽂件
+
+```js
+{
+  package.json 的 main 字段为 index.js
+  if (process.env.NODE_ENV === "production") {
+    module.exports = require("./dist/large-number.min.js");
+  } else {
+    module.exports = require("./dist/large-number.js");
+  }
+}
+```
