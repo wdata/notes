@@ -616,7 +616,7 @@ uglify 阶段被擦除掉。
 使⽤：webpack 默认⽀持，在 .babelrc ⾥设置 modules: false 即可
 要求：必须是 ES6 的语法，CJS 的⽅式不⽀持
 
-#### DCE (Dead code elimination)：
+#### DCE (Dead code elimination)
 
 1. 代码执⾏的结果不会被⽤到
 2. 代码不会被执⾏，不可到达
@@ -689,5 +689,63 @@ chunks（语块），当代码运⾏到需要它们的时候再进⾏加载。
 
   // ES6：动态 import
   "plugins": ["@babel/plugin-syntax-dynamic-import"]
+}
+```
+
+### 3.11、ESLint 的必要性
+
+暴露明显的问题、统一风格、统一配置
+
+ESLint：
+
+1. Airbnb: eslint-config-airbnb、 eslint-config-airbnb-base
+2. 腾讯alloyteam 团队 [eslint-config-alloy](https://github.com/AlloyTeam/eslint-config-alloy)
+3. ivweb  团队：[eslint-config-ivweb](https://github.com/feflow/eslint-config-ivweb)
+
+制定团队的 ESLint 规范：
+
+1. 不重复造轮⼦，基于 eslint:recommend 配置并改进
+2. 能够帮助发现代码错误的规则，全部开启
+3. 帮助保持团队的代码⻛格统⼀，⽽不是限制开发体验
+
+![Eslint](./static/eslint.png)
+
+ESLint 如何执⾏落地？
+
+1. CI/CD 系统集成
+2. webpack 集成
+
+```js
+{
+  // ⽅案⼀：webpack 与 CI/CD 集成
+  // 本地开发阶段增加 precommit 钩⼦
+  npm install husky --save-dev
+
+  "scripts": {
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+      "linters": {
+          "*.{js,scss}": ["eslint --fix", "git add"]
+      }
+  },
+
+  // ⽅案⼆：webpack 与 ESLint 集成
+  // 使⽤ eslint-loader，构建时检查 JS 规范
+  npm install eslint-loader --save-dev
+
+  module.exports = {
+    module: {
+      rules: [{
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: [
+          "babel-loader",
+          // 新增
+          "eslint-loader"
+        ]
+      }]
+    }
+  }
 }
 ```

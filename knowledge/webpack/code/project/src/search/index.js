@@ -1,10 +1,3 @@
-/*
- * @Author: 王凌军
- * @Date: 2021-02-19 17:20:30
- * @LastEditors: 王凌军
- * @LastEditTime: 2021-04-20 16:00:25
- * @Description: 请输入描述
- */
 'set strict'
 
 import React from 'react'
