@@ -897,3 +897,21 @@ webpack ssr 打包存在的问题
 2. 替换占位符
 
 ### 3.13、当前构建时的⽇志显示
+
+webpack 输出信息stats：
+
+| Preset      | Alternative | Description                    |
+| :---------- | :---------: | :----------------------------- |
+| errors-only |    none     | 只在发生错误时输出             |
+| minimal     |    none     | 只在发生错误或有新的编译时输出 |
+| none        |    false    | 没有输出                       |
+| normal      |    true     | 标准输出                       |
+| verbose     |    none     | 全部输出                       |
+
+#### 使⽤ friendly-errors-webpack-plugin
+
+1. success: 构建成功的⽇志提示
+2. warning: 构建警告的⽇志提示
+3. error: 构建报错的⽇志提示
+
+stats 设置成 errors-only

@@ -5,6 +5,7 @@ const webpack = require('webpack')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin') // 自动清理output输出目录
 const HtmlWebpackPlugin = require('html-webpack-plugin') // 配置html页面
 const glob = require('glob')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin')
 
 const setMPA = () => {
   const entry = {}
@@ -92,9 +93,11 @@ module.exports = {
     ]
   },
   // 引入webpack自带的插件
-  plugins: [new webpack.HotModuleReplacementPlugin(), new CleanWebpackPlugin()].concat(
-    htmlWebpackPlugins
-  ),
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new CleanWebpackPlugin(),
+    new FriendlyErrorsWebpackPlugin()
+  ].concat(htmlWebpackPlugins),
   // webpack-dev-server 配置
   devServer: {
     contentBase: './dist', // 指定目录
@@ -102,6 +105,7 @@ module.exports = {
     host: 'localhost', // 服务器的ip地址
     port: 25501, // 端口
     open: true // 自动打开页面
+    // stats: 'errors-only'
   },
   // source map 配置
   devtool: 'source-map'
