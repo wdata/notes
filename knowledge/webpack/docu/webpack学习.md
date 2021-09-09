@@ -1016,3 +1016,31 @@ Node.js 中的 process.exit 规范
     index.js
  }
 ```
+
+#### 使用ESLint规范构建脚本
+
+```js
+{
+  // 使用 eslint-config-airbnb-base
+  module.exports = {
+    parser: 'babel-eslint',
+    extends: 'airbnb-base',
+    env: {
+      browser: true,
+      node: true
+    }
+  }
+
+  // eslint --fix 自动处理空格
+}
+```
+
+#### 冒烟测试
+
+冒烟测试是指对提交测试的软件在进行详细深入的测试之前而进行的预测试，这种
+预测试的主要目的是暴露导致软件需重新发布的基本功能失效等严重问题。
+
+判断构建是否成功：
+
+1. 是否有JS、CSS等静态资源文件；
+2. 是否有HTML文件
