@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>csv转换</title>
+  <style>
+    #csvFileInput {
+      position: absolute;
+      right: 0px;
+      opacity: 0;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 创建隐藏file input -->
+  <button type="button" name="seach" onclick="FuncCSVInport()">CSV Import</button>
+  <input type="file" id="csvFileInput" onchange="readCSVFile(this)" />
+  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/require.js/2.3.6/require.min.js"></script> -->
+  <!-- <script src="https://cdn.rawgit.com/Keyang/node-csvtojson/d41f44aa/browser/csvtojson.min.js"></script> -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/PapaParse/5.3.2/papaparse.js"></script>
+  <script src="./data.json"></script>
+  <script>
+    // csv({
+    //   output: "csv"
+    // })
+    // .fromString("a,b,c\n1,2,3")
+    // .then(function(result){
+    //   console.log(result);
+    // })
+
+    // const csvFilePath = './1.csv'
+    // csv()
+    //   .fromFile(csvFilePath)
+    //   .then((jsonObj) => {
+    //     console.log(jsonObj);
+    //     /**
+    //      * [
+    //      * 	{a:"1", b:"2", c:"3"},
+    //      * 	{a:"4", b:"5". c:"6"}
+    //      * ]
+    //      */
+    //   });
+    /**
+        output——要转换的格式。它可以是 'json'，这是默认的，'csv'，这是一个csv行，或者 'line'，它将csv转换成一个csv行字符串。
+        delimiter——用于分隔列的分隔符。'auto' 应该是未知值。
+        quote——如果列中有定界符，则可以使用引号字符将列内容括起来，这样，'hello,world' 之类的文本就不会被视为包含在两列中。
+        trim——如果要去除空格则为 true，否则为 false。
+        checkType——打开和关闭是否检查字段类型。
+        ignoreEmpty——忽略CSV列中的空值。
+        noheader——如果我们解析的CSV中没有标题，则返回 true。
+        headers——一个用于指定CSV数据标题的数组。如果为 false，则此值将覆盖CSV标头行。
+        flatKeys——不将标题字段中的 .和 [] 解释为嵌套对象。默认为 false。
+        maxRowLength——CSV行可以包含的最大字符。
+        checkColumn——检查行的列号是否与标题相同。
+        eol——要检查的行尾字符。
+        escape——用引号引起来的转义字符。默认为双引号。
+        includeColumns——正则表达式，包含列的模式。
+        ignoreColumns——带有模式的正则表达式，可忽略的列。
+        colParser——一个JSON对象来重写如何解析列。例如 { foo : 'number'} 将把 foo 字段解析为一个数字。
+        alwaysSplitAtEOL——布尔值，指示是否按行末尾分割每行。
+        nullObject——布尔值，指示我们是否保持 null。
+        downstreamFormat——选项设置下游所需的JSON数组格式。解析为CSV行可以为 'line'，向下游编写完整的JSON数组可以为 'array'。
+        needEmitAll——如果调用 .then 或使用 await，则解析器将生成JSON结果。
+     */
+    function FuncCSVInport() {
+      $("#csvFileInput").val("");
+      $("#csvFileInput").click();
+    }
+
+    /**
+     重要！！！ 如果中文有乱码
+     1、使用Notepad++ 打开cvs文件，右上角编码，选择转换为UTF-8格式
+     **/
+    function readCSVFile(obj) {
+      const reader = new FileReader();
+      reader.readAsText(obj.files[0]);
+      reader.onload = function() {
+        // csv({
+        //   output: "csv",
+        // })
+        //   .fromString(this.result)
+        //   .then(function(result) {
+        //     console.log(result);
+        //   });
+
+        Papa.parse(this.result, {
+          // header: true,
+          complete: function(results) {
+            console.log("Finished:", results.data);
+          }
+        });
+      }
+    }
+
+    console.log(dataList);
+
+    var data = getDataCalc(dataList);
+
+    console.log(data);
+
+    // 数据处理
+    function getDataCalc(list) {
+      const result = {};
+      const headers = getHeader(list);
+      const data = getData(list);
+      for(let h = 0; h < headers.length; h++) {
+        const key = headers[h];
+        const headerData = [];
+        for(let i = 0; i < data.length; i++) {
+          const val = keySpecial(key, data[i][h]);
+          headerData.push(val);
+        };
+
+        result[key] = headerData;
+      };
+      return result;
+    }
+
+    // 收集标题
+    function getHeader(data) {
+      return data[0];
+    }
+
+    // 收集数据
+    function getData(data) {
+      return data.slice(1);
+    }
+
+    // 特殊key的处理
+    function keySpecial(key, data) {
+      switch(key) {
+        case '事件内容': return contentSpecial(data);
+      };
+      return data;
+    }
+
+    // 全局特殊处理
+    function commonHandle(data) {
+
+    }
+
+    // 事件内容特殊处理
+    function contentSpecial(data) {
+      let result = jsonParse(data);
+      if (result && result.data) {
+        result = jsonParse(result.data);
+        if (result.device_object) {
+          result.device_object = jsonParse(result.device_object)
+        }
+      }
+      return result;
+    }
+
+
+
+    // 对象、数组解压
+    function objectJsonParse() {
+
+    }
+
+    // 解压json
+    function jsonParse(data) {
+      if (!(data && typeof data === 'string')) return data;
+      try {
+        return JSON.parse(data);
+      } catch {
+        return data;
+      }
+    }
+  </script>
+</body>
+
+</html>
