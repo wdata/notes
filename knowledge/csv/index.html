@@ -1,49 +1,48 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="utf-8" />
+    <title>csv转换</title>
+    <style>
+      #csvFileInput {
+        position: absolute;
+        right: 0px;
+        opacity: 0;
+      }
+    </style>
+  </head>
 
-<head>
-  <meta charset="utf-8">
-  <title>csv转换</title>
-  <style>
-    #csvFileInput {
-      position: absolute;
-      right: 0px;
-      opacity: 0;
-    }
-  </style>
-</head>
+  <body>
+    <!-- 创建隐藏file input -->
+    <button type="button" name="seach" onclick="FuncCSVInport()">CSV Import</button>
+    <input type="file" id="csvFileInput" onchange="readCSVFile(this)" />
+    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <!-- <script src="https://cdn.bootcdn.net/ajax/libs/require.js/2.3.6/require.min.js"></script> -->
+    <!-- <script src="https://cdn.rawgit.com/Keyang/node-csvtojson/d41f44aa/browser/csvtojson.min.js"></script> -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/PapaParse/5.3.2/papaparse.js"></script>
+    <script src="./data/data.json"></script>
+    <script>
+      // csv({
+      //   output: "csv"
+      // })
+      // .fromString("a,b,c\n1,2,3")
+      // .then(function(result){
+      //   console.log(result);
+      // })
 
-<body>
-  <!-- 创建隐藏file input -->
-  <button type="button" name="seach" onclick="FuncCSVInport()">CSV Import</button>
-  <input type="file" id="csvFileInput" onchange="readCSVFile(this)" />
-  <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <!-- <script src="https://cdn.bootcdn.net/ajax/libs/require.js/2.3.6/require.min.js"></script> -->
-  <!-- <script src="https://cdn.rawgit.com/Keyang/node-csvtojson/d41f44aa/browser/csvtojson.min.js"></script> -->
-  <script src="https://cdn.bootcdn.net/ajax/libs/PapaParse/5.3.2/papaparse.js"></script>
-  <script src="./data.json"></script>
-  <script>
-    // csv({
-    //   output: "csv"
-    // })
-    // .fromString("a,b,c\n1,2,3")
-    // .then(function(result){
-    //   console.log(result);
-    // })
-
-    // const csvFilePath = './1.csv'
-    // csv()
-    //   .fromFile(csvFilePath)
-    //   .then((jsonObj) => {
-    //     console.log(jsonObj);
-    //     /**
-    //      * [
-    //      * 	{a:"1", b:"2", c:"3"},
-    //      * 	{a:"4", b:"5". c:"6"}
-    //      * ]
-    //      */
-    //   });
-    /**
+      // const csvFilePath = './1.csv'
+      // csv()
+      //   .fromFile(csvFilePath)
+      //   .then((jsonObj) => {
+      //     console.log(jsonObj);
+      //     /**
+      //      * [
+      //      * 	{a:"1", b:"2", c:"3"},
+      //      * 	{a:"4", b:"5". c:"6"}
+      //      * ]
+      //      */
+      //   });
+      /**
         output——要转换的格式。它可以是 'json'，这是默认的，'csv'，这是一个csv行，或者 'line'，它将csv转换成一个csv行字符串。
         delimiter——用于分隔列的分隔符。'auto' 应该是未知值。
         quote——如果列中有定界符，则可以使用引号字符将列内容括起来，这样，'hello,world' 之类的文本就不会被视为包含在两列中。
@@ -65,112 +64,180 @@
         downstreamFormat——选项设置下游所需的JSON数组格式。解析为CSV行可以为 'line'，向下游编写完整的JSON数组可以为 'array'。
         needEmitAll——如果调用 .then 或使用 await，则解析器将生成JSON结果。
      */
-    function FuncCSVInport() {
-      $("#csvFileInput").val("");
-      $("#csvFileInput").click();
-    }
+      function FuncCSVInport() {
+        $('#csvFileInput').val('')
+        $('#csvFileInput').click()
+      }
 
-    /**
+      /**
      重要！！！ 如果中文有乱码
      1、使用Notepad++ 打开cvs文件，右上角编码，选择转换为UTF-8格式
      **/
-    function readCSVFile(obj) {
-      const reader = new FileReader();
-      reader.readAsText(obj.files[0]);
-      reader.onload = function() {
-        // csv({
-        //   output: "csv",
-        // })
-        //   .fromString(this.result)
-        //   .then(function(result) {
-        //     console.log(result);
-        //   });
+      function readCSVFile(obj) {
+        const reader = new FileReader()
+        reader.readAsText(obj.files[0])
+        reader.onload = function () {
+          // csv({
+          //   output: "csv",
+          // })
+          //   .fromString(this.result)
+          //   .then(function(result) {
+          //     console.log(result);
+          //   });
 
-        Papa.parse(this.result, {
-          // header: true,
-          complete: function(results) {
-            console.log("Finished:", results.data);
-          }
-        });
-      }
-    }
-
-    console.log(dataList);
-
-    var data = getDataCalc(dataList);
-
-    console.log(data);
-
-    // 数据处理
-    function getDataCalc(list) {
-      const result = {};
-      const headers = getHeader(list);
-      const data = getData(list);
-      for(let h = 0; h < headers.length; h++) {
-        const key = headers[h];
-        const headerData = [];
-        for(let i = 0; i < data.length; i++) {
-          const val = keySpecial(key, data[i][h]);
-          headerData.push(val);
-        };
-
-        result[key] = headerData;
-      };
-      return result;
-    }
-
-    // 收集标题
-    function getHeader(data) {
-      return data[0];
-    }
-
-    // 收集数据
-    function getData(data) {
-      return data.slice(1);
-    }
-
-    // 特殊key的处理
-    function keySpecial(key, data) {
-      switch(key) {
-        case '事件内容': return contentSpecial(data);
-      };
-      return data;
-    }
-
-    // 全局特殊处理
-    function commonHandle(data) {
-
-    }
-
-    // 事件内容特殊处理
-    function contentSpecial(data) {
-      let result = jsonParse(data);
-      if (result && result.data) {
-        result = jsonParse(result.data);
-        if (result.device_object) {
-          result.device_object = jsonParse(result.device_object)
+          Papa.parse(this.result, {
+            // header: true,
+            complete: function (results) {
+              console.log('Finished:', results.data)
+              console.log(getDataCalc(results.data));
+            }
+          })
         }
       }
-      return result;
-    }
 
+      // console.log(dataList)
 
+      // const remarkList = [];
+      // var data = getDataCalc(dataList)
 
-    // 对象、数组解压
-    function objectJsonParse() {
+      // console.log(data);
+      // // console.log(remarkList);
+      // console.log(statisticsData(remarkList));
 
-    }
+      // 数据处理
+      function getDataCalc(list) {
+        const result = {}
+        const headers = getHeader(list)
+        const data = getData(list)
 
-    // 解压json
-    function jsonParse(data) {
-      if (!(data && typeof data === 'string')) return data;
-      try {
-        return JSON.parse(data);
-      } catch {
-        return data;
+        for (let h = 0; h < headers.length; h++) {
+          const key = headers[h]
+          const arr = [] // 列表
+          for (let i = 0; i < data.length; i++) {
+            const val = keySpecial(key, data[i][h])
+            arr.push(val)
+          }
+
+          result[key] = {
+            arr: arr,
+            statistics: statisticsData(arr)
+          }
+        }
+        return result
       }
-    }
-  </script>
-</body>
 
+      // 收集标题
+      function getHeader(data) {
+        return data[0]
+      }
+
+      // 收集数据
+      function getData(data) {
+        const result = data.slice(1);
+        const header = data[0];
+
+        function filter(list) {
+          let result = list;
+          const filterData = {
+            '租户标识': {
+              data: ['mysoft', 'myyl'],
+              filterBool: false
+            },
+            // '真实用户标识': {
+            //   data: ['13539678972'],
+            //   filterBool: true
+            // }
+          };
+          const keys = Object.keys(filterData);
+          for (let x = 0; x < keys.length; x++) {
+            const index = header.indexOf(keys[x]);
+            if (index >= 0) {
+              const item = filterData[keys[x]];
+              result = filterSimply(result, index, item && item.data, item && item.filterBool);
+            }
+          }
+          return result;
+        }
+
+        // 过滤对应的数据：true 筛选，false 忽略
+        function filterSimply(list, index, values, bool = false) {
+          const result = [];
+          for(let x = 0; x < list.length; x++) {
+            const val = list[x][index];
+            const bur = bool ? values.includes(val) : !values.includes(val);
+            if (bur) {
+              result.push(list[x]);
+            }
+          }
+          return result;
+        }
+        return filter(result);
+      }
+
+      // 特殊key的处理
+      function keySpecial(key, data) {
+        switch (key) {
+          case '事件内容':
+            return contentSpecial(data)
+        }
+        return data
+      }
+
+      // 全局特殊处理
+      function commonHandle(data) {}
+
+      // 事件内容特殊处理
+      function contentSpecial(data) {
+        let result = jsonParse(data)
+        if (result && result.data) {
+          result = jsonParse(result.data)
+          if (result.device_object) {
+            result.device_object = jsonParse(result.device_object)
+          }
+          result.debug_file = unescape(result.debug_file);
+          remarkList.push(result.remark);
+        }
+        return result
+      }
+
+      // 统计信息
+      function statisticsData(list) {
+        const len = list.length
+        const obj = []
+        // 统计
+        for (let x = 0; x < len; x++) {
+          if (typeof list[x] === 'string') {
+            if (obj[list[x]]) {
+              obj[list[x]] += 1
+            } else {
+              obj[list[x]] = 1
+            }
+          }
+        }
+        // 数值排序
+        const result = [];
+        let keysSorted = Object.keys(obj).sort(function (a, b) {
+          return obj[b] - obj[a]
+        })
+        for (let i = 0; i < keysSorted.length; i++) {
+          result.push({ [keysSorted[i]]: obj[keysSorted[i]] });
+        }
+
+        return result
+      }
+
+      // 对象、数组解压
+      function objectJsonParse() {}
+
+      // 解压json
+      function jsonParse(data) {
+        if (!(data && typeof data === 'string')) return data
+        try {
+          return JSON.parse(data)
+        } catch {
+          return data
+        }
+      }
+    </script>
+  </body>
 </html>
