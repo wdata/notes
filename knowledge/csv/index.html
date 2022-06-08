@@ -16,10 +16,10 @@
     <!-- 创建隐藏file input -->
     <button type="button" name="seach" onclick="FuncCSVInport()">CSV Import</button>
     <input type="file" id="csvFileInput" onchange="readCSVFile(this)" />
-    <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="./plug/jquery-3.6.0.min.js"></script>
     <!-- <script src="https://cdn.bootcdn.net/ajax/libs/require.js/2.3.6/require.min.js"></script> -->
     <!-- <script src="https://cdn.rawgit.com/Keyang/node-csvtojson/d41f44aa/browser/csvtojson.min.js"></script> -->
-    <script src="https://cdn.bootcdn.net/ajax/libs/PapaParse/5.3.2/papaparse.js"></script>
+    <script src="./plug/papaparse.min.js"></script>
     <script src="./data/data.json"></script>
     <script>
       // csv({
@@ -197,6 +197,7 @@
           result.debug_file = unescape(result.debug_file);
           remarkList.push(result.remark);
         }
+        console.log(result, result.data);
         return result
       }
 
