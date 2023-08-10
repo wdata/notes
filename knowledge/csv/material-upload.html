@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>材料验收</title>
+    <style>
+      #csvFileInput {
+        position: absolute;
+        right: 0px;
+        opacity: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- 创建隐藏file input -->
+    <button type="button" name="seach" onclick="FuncCSVInport()">CSV Import</button>
+    <input type="file" id="csvFileInput" onchange="readCSVFile(this)" />
+
+    <script src="./plug/jquery-3.6.0.min.js"></script>
+    <script src="./plug/papaparse.min.js"></script>
+    <script src="./test-data.js"></script>
+    <!-- <script src="./data/2022-09.json"></script> -->
+    <script>
+      function FuncCSVInport() {
+        $('#csvFileInput').val('')
+        $('#csvFileInput').click()
+      }
+
+      function readCSVFile(obj) {
+        console.log('🚀 ~ file: material-upload.html ~ line 31 ~ readCSVFile ~ obj', obj)
+        const reader = new FileReader()
+        reader.readAsText(obj.files[0])
+        reader.onload = function () {
+          Papa.parse(this.result, {
+            complete: function (results) {
+              // console.log('Finished:', results.data);
+
+              const result = [];
+              results.data.forEach(item => {
+                const data = jsonParse(item[5]);
+                if (data && data.data) {
+                  result.push({
+                    data: jsonParse(data.data),
+                    time: item[27]
+                  });
+                }
+              });
+
+              console.log('result:', result);
+              const contents = [];
+              for(let x = 0; x < result.length; x++) {
+                const item = result[x];
+                if (item.data) {
+                  let uploadTime = null;
+                  let data = null;
+                  for (const y in item.data) {
+                    // 图片上传影响计算
+                    if (!['material_task_photo_requirement'].includes(y)) {
+                      const info = item.data[y];
+                      if (Array.isArray(info)) {
+                        for (const y2 of info) {
+                          uploadTime = compareTime(uploadTime, y2.modified_on || y2.created_on);
+                        }
+                      } else {
+                        uploadTime = compareTime(uploadTime, info.modified_on || info.created_on);
+                      }
+                    }
+
+                  }
+
+                  if (uploadTime) {
+                    contents.push({
+                      data: item.data,
+                      uploadTime: uploadTime,
+                      time: item.time,
+                      timeDifference: (new Date(item.time).getTime() - new Date(uploadTime).getTime()) / 1000
+                    })
+                  }
+                }
+              }
+              console.log('contents:', contents);
+
+
+              console.log('打印:', JSON.stringify(contents.map(item => {
+                delete item.data;
+                return item;
+              })));
+
+              console.log('percentage', {
+                '10秒钟以内': percentage(contents, null, 10),
+                '30秒钟以内': percentage(contents, null, 30),
+                '1分钟以内': percentage(contents, null, 60),
+                '1小时以内': percentage(contents, null, 60 * 60),
+                '1小时以后': percentage(contents, 60 * 60, null),
+              });
+            }
+          })
+        }
+      }
+
+      console.log(testData.length, '总计：', 7 * 15000);
+      console.log('testData-percentage', {
+      '10秒钟以内': percentage(testData, null, 10),
+      '30秒钟以内': percentage(testData, null, 30),
+      '1分钟以内': percentage(testData, null, 60),
+      '1小时以内': percentage(testData, null, 60 * 60),
+      '1小时以后': percentage(testData, 60 * 60, null),
+    });
+
+      // 返回百分比
+      function percentage(list, min, max) {
+        const total = list.length;
+        const result = list.filter(item => {
+          let bool = true;
+          if (min) {
+            bool = bool && item.timeDifference >= min;
+          }
+          if (max) {
+            bool = bool && item.timeDifference <= max;
+          }
+          return bool;
+        });
+        const round = (num) => {
+          return Math.round(num * 100) / 100;
+        }
+        return round((result.length / total) * 100) + '%';
+      }
+
+      // 返回最大时间
+      function compareTime(str1, str2) {
+        if (new Date(str1).getTime() > new Date(str2).getTime()) {
+          return str1;
+        } else {
+          return str2;
+        };
+      };
+
+      // 解压json
+      function jsonParse(data) {
+        if (!(data && typeof data === 'string')) return data
+        try {
+          return JSON.parse(data)
+        } catch {
+          return {}
+        }
+      }
+    </script>
+  </body>
+</html>
