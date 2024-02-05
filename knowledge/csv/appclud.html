@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>材料验收</title>
+    <style>
+      #csvFileInput {
+        position: absolute;
+        right: 0px;
+        opacity: 0;
+      }
+    </style>
+  </head>
+
+  <body>
+    <script src="./plug/lodash.js"></script>
+    <script src="./data/2023-08-22-appclued.js"></script>
+    <!-- <script src="./data/2022-09.json"></script> -->
+    <script>
+      function FuncCSVInport() {
+        $('#csvFileInput').val('')
+        $('#csvFileInput').click()
+      }
+
+      const fields = {
+        '事件内容': 'event',
+        '真实用户标识': 'photo',
+        '页面路径': 'page',
+        '租户': 'tenant',
+        '操作系统名称': 'system',
+        '设备型号': 'equip',
+      };
+
+      let result = [];
+      _.each(data.data.list, item => {
+        const obj = {};
+        _.each(Object.keys(item), val => {
+          const key = val.replaceAll('`', '');
+          obj[fields[key]] = item[val].value;
+        });
+        result.push(obj);
+      });
+      _.each(result, item => {
+        item.event = jsonParse(item.event);
+        item.errMsg = item.event.extraInfo.error.errMsg;
+        item.coreErrMsg = item.errMsg.split('\n')[0];
+        item.objectKey = item.event.extraInfo.image.objectKey;
+        item.time_diff = item.event.extraInfo.time_diff;
+        item.time_diff = item.time_diff ? Number(item.time_diff.replaceAll('s', '')) : 0;
+
+        // 数据处理
+        item.page = item.page.replaceAll('/index.html#/zjapp/', '');
+        item.page = item.page.replaceAll('/index.html?', '');
+        item.page = item.page.replace(new RegExp("v.*?zjapp/"), '', 'gi');
+        item.page = item.page.replace(new RegExp("v.*?#/"), '', 'gi');
+        item.page = mergeData(item.page, 'check-detail');
+        item.page = mergeData(item.page, 'material-detail');
+        item.page = mergeData(item.page, 'material-v3/detail');
+
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'Error Domain=com.aliyun.oss.clientError Code=6 "似乎已断开与互联网的连接。"');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'Error Domain=com.aliyun.oss.clientError Code=6 "目前不允许数据连接。"');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'Error Domain=com.aliyun.oss.clientError Code=6 "请求超时。"');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'Error Domain=com.aliyun.oss.clientError Code=6 "网络连接已中断。"');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'Error Domain=com.aliyun.oss.serverError Code=-403 "(null)"');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'Error Domain=com.aliyun.oss.serverError Code=-404 "(null)"');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'I/O error during system call, Software caused connection abort', 'com.alibaba.sdk.android.oss.ClientException: Read error: ssl=0x7a1d655188: I/O error during system call, Software caused connection abort');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'error during system call, Connection reset by peer', 'com.alibaba.sdk.android.oss.ClientException: Read error: ssl=0x7a2fe3be48: I/O error during system call, Connection reset by peer');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'Failed to connect to', 'com.alibaba.sdk.android.oss.ClientException: Failed to connect to');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'failed to connect to', 'com.alibaba.sdk.android.oss.ClientException: Failed to connect to');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'unexpected end of stream on', 'com.alibaba.sdk.android.oss.ClientException: unexpected end of stream on');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'xxxx');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'xxxx');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'xxxx');
+        // item.coreErrMsg = mergeData(item.coreErrMsg, 'xxxx');
+
+
+
+      });
+
+      result = result.filter(item => {
+        return item.time_diff <= 10 && item.time_diff !== 0;
+      })
+      console.log('result:', result);
+
+      // console.log(JSON.stringify(getData(result, 'errMsg')))
+
+      // console.log('时间统计分析: ', static(getData(result, 'time_diff')));
+      console.log('事件内容统计: ', static(getData(result, 'coreErrMsg')));
+      console.log('真实用户标识统计: ', static(getData(result, 'photo')));
+      console.log('页面路径统计: ', static(getData(result, 'page')));
+      console.log('租户统计: ', static(getData(result, 'tenant')));
+      console.log('操作系统名称统计: ', static(getData(result, 'system')));
+      console.log('设备型号统计: ', static(getData(result, 'equip')));
+
+      function mergeData(item, incl, infoData) {
+        return item.includes(incl) ? infoData || incl : item;
+      }
+
+      // 获取数据
+      function getData(list, field) {
+        return _.map(list, item => {
+          return item[field];
+        });
+      }
+
+      // 统计数量
+      function static(list) {
+        const result = {};
+        const uniq = _.uniq(list);
+        _.each(uniq, item => {
+          const len =  _.filter(list, val => val === item).length;
+          result[item] = len;
+          // result[item] = `${_.round((len / list.length) * 100, 2)}%`;
+        });
+        return result;
+      }
+
+      // 解压json
+      function jsonParse(data) {
+        try {
+          return JSON.parse(data);
+        } catch {
+          return {};
+        }
+      }
+    </script>
+  </body>
+</html>

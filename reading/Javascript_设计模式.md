@@ -915,7 +915,7 @@ new 关键字的作用可以看作是对当前对象的 this 不停地赋值，�
         var div = document.createElement('div')
         div.innerHTML = content
         div.style.border = '1px solid red'
-        document.getElementById('container').appendchild(div)
+        document.getElementById('container').appendChild(div)
       })(content)
     },
     Java: function (content) {
@@ -953,7 +953,7 @@ new 关键字的作用可以看作是对当前对象的 this 不停地赋值，�
         button.style.width = content.width || '100px'
         button.style.height = content.height || '40px'
         button.style.backgroundColor = content.backgroundColor
-        document.getElementById('container').appendchild(button)
+        document.getElementById('container').appendChild(button)
       })(content)
     },
     disable: function (content) {
@@ -1483,7 +1483,7 @@ new 关键字的作用可以看作是对当前对象的 this 不停地赋值，�
 　<script type="text/Javascript" src="http://localhost/test/jsonp.php?callback=jsonp callBack&data=getJsonPData"></script>
 　// 另外—个域下服务器请求接口
 　<?php
-　 /*后端获取请求字段数据，并生成返回内容*/
+  /*后端获取请求字段数据，并生成返回内容*/
 　$data = $_GET["data"];
 　$callback = $_GET["callback"];
 　echo $callback."('success', '".$data."')";
@@ -1493,7 +1493,7 @@ new 关键字的作用可以看作是对当前对象的 this 不停地赋值，�
 
 #### 代理模板
 
-比如我们将自己的域称为X域，另外的域称为Y域，X域中要有一个被代理页面，即A页面。在A页面中应该具备三个部分，第一个部分是发送请求的模块，如form表单提交，负责向Y域发送请求，并提供额外两组数据，其一是要执行的回调函数名称，其二是X域中代理模板所在的路径，并将target目标指向内嵌框架。第二个部分是一个内嵌框架，如iframe，负责提供第一个部分中form表单的响应目标target的指向，并将嵌入X域中的代理页面作为子页面，即B页面。第三个部分是一个回调函数，负责处理返回的数据。
+比如我们将自己的域称为 X 域，另外的域称为 Y 域，X 域中要有一个被代理页面，即 A 页面。在 A 页面中应该具备三个部分，第一个部分是发送请求的模块，如 form 表单提交，负责向 Y 域发送请求，并提供额外两组数据，其一是要执行的回调函数名称，其二是 X 域中代理模板所在的路径，并将 target 目标指向内嵌框架。第二个部分是一个内嵌框架，如 iframe，负责提供第一个部分中 form 表单的响应目标 target 的指向，并将嵌入 X 域中的代理页面作为子页面，即 B 页面。第三个部分是一个回调函数，负责处理返回的数据。
 
 ```php
 {
@@ -1506,9 +1506,9 @@ new 关键字的作用可以看作是对当前对象的 this 不停地赋值，�
 　<iframe name="proxyIframe" id="proxyIframe" src="">
 　</iframe>
 　<form action="http://localhost/test/proxy.php" method="post" target="proxyIframe">
-　 <input type="text" name="callback" value="callback">
-　 <input type="text" name="proxy" value="http://localhost:8080/proxy.html">
-　 <input type="submit" value="提交">
+  <input type="text" name="callback" value="callback">
+  <input type="text" name="proxy" value="http://localhost:8080/proxy.html">
+  <input type="submit" value="提交">
 　</form>
 
   // 代理页面B
@@ -1538,7 +1538,7 @@ new 关键字的作用可以看作是对当前对象的 this 不停地赋值，�
   　　//执行A页面中预设的回调函数
   　　eval('top.' + fn + '("' + args + '")');
   　} catch(e){
-      
+
     }
 　}
 　</script>
@@ -1546,101 +1546,602 @@ new 关键字的作用可以看作是对当前对象的 this 不停地赋值，�
 
   // 接口文件C
   <?php
-　 $proxy = $_PosT["proxy"];
-　 $callback = $_PosT["callback"];
-　 header("Location:".$proxy."?callback=".$callback."&arg=success");
+  $proxy = $_PosT["proxy"];
+  $callback = $_PosT["callback"];
+  header("Location:".$proxy."?callback=".$callback."&arg=success");
 　?>
   // 测试结果
 　/*
-　 控制台输出依次是
-　 成功接收数据success
+  控制台输出依次是
+  成功接收数据success
 　*/
 }
 ```
 
-#### 问题：动态加载script标签的方法+图片预览这种代理模式
+#### 问题: 动态加载 script 标签的方法+图片预览这种代理模式
 
 ### 装饰者模式
 
-装饰者模式（Decorator）：在不改变原对象的基础上，通过对其进行包装拓展（添加属性或者方法）使原有对象可以满足用户的更复杂需求。
+装饰者模式（Decorator）: 在不改变原对象的基础上，通过对其进行包装拓展（添加属性或者方法）使原有对象可以满足用户的更复杂需求。
 
 ```js
 {
-  　// 装饰者
-　var decorator = function(input, fn){
-　 // 获取事件源
-　 var input = document.getElementById(input)；
-　 // 若事件源己经绑定事件
-　 if(typeof input.onclick === 'function'){
-　　// 缓存事件源原有回调函数
-　　var oldclickFn = input.onclick；
-　　// 为事件源定义新的事件
-　　input.onclick = function(){
-　　 // 事件源原有回调函数
-　　 oldclickFn()；
-　　 // 执行事件源新增回调函数
-　　 fn()；
-　　}
-　 }else{
-　　// 事件源未绑定事件，直接为事件源添加新增回调函数
-　　input.onclick = fn；
-　 }
-　 // 做其他事情
-　}
+  // 装饰者
+  var decorator = function (input, fn) {
+    // 获取事件源
+    var input = document.getElementById(input) // 若事件源己经绑定事件
+    if (typeof input.onclick === 'function') {
+      // 缓存事件源原有回调函数
+      var oldclickFn = input.onclick // 为事件源定义新的事件
+      input.onclick = function () {
+        // 事件源原有回调函数
+        oldclickFn() // 执行事件源新增回调函数
+        fn()
+      }
+    } else {
+      // 事件源未绑定事件，直接为事件源添加新增回调函数
+      input.onclick = fn
+    } // 做其他事情
+  }
 }
 ```
 
-#### 问题：对输入框添加focus与blur事件，想一想通过装饰者模式如何实现？
+#### 问题: 对输入框添加 focus 与 blur 事件，想一想通过装饰者模式如何实现？
 
 ### 桥接模式
 
-桥接模式（Bridge）：在系统沿着多个维度变化的同时，又不增加其复杂度并己达到解耦。
+桥接模式（Bridge）: 在系统沿着多个维度变化的同时，又不增加其复杂度并己达到解耦。
 
 ```js
 {
-  　// 抽象
-　function changecolor(dom, color, bg){
-　 // 设置元素的字体颜色
-　 dom.style.color = color；
-　 // 设置元素的背景颜色
-　 dom.style.background = bg；
-　}
-　spans[1].onmouseover = function(){
-　 changecolor(this.getElementsByTagName('strong')[0], 'red', '#ddd')；
-　}
-　spans[1].onmouseout = function(){
-　 changecolor(this.getElementsByTagName('strong')[0], '#333', '#f5f5f5')；
-　}
+  // 抽象
+  function changeColor(dom, color, bg) {
+    // 设置元素的字体颜色
+    dom.style.color = color // 设置元素的背景颜色
+    dom.style.background = bg
+  }
+  spans[1].onmouseover = function () {
+    changeColor(this.getElementsByTagName('strong')[0], 'red', '#ddd')
+  }
+  spans[1].onmouseout = function () {
+    changeColor(this.getElementsByTagName('strong')[0], '#333', '#f5f5f5')
+  } // 多维变量类 // 运动单元
 
   // 多元化对象
-  　// 多维变量类
-　// 运动单元
-　function speed(x, y){
-　 this.x = x；
-　 this.y = y；
-　}
-　speed.prototype.run = function(){
-　 console.log('运动起来')；
-　}
-　function Ball(x,y,c){
-　 // 实现运动单元
-　 this.speed = new speed(x,y)；
-　 // 实现着色单元
-　 this.color = new color(c)；
-　}
-　Ball.prototype.init = function(){
-　 // 实现运动
-　 this.speed.run()；
-　 // 实现着色
-　 this.color.draw()；
-　}
+  function speed(x, y) {
+    this.x = x
+    this.y = y
+  }
+  speed.prototype.run = function () {
+    console.log('运动起来')
+  }
+  function Ball(x, y, c) {
+    // 实现运动单元
+    this.speed = new speed(x, y) // 实现着色单元
+    this.color = new color(c)
+  }
+  Ball.prototype.init = function () {
+    // 实现运动
+    this.speed.run() // 实现着色
+    this.color.draw()
+  }
 }
 ```
 
-桥接模式最主要的特点即是将实现层（如元素绑定的事件）与抽象层（如修饰页面UI逻辑）解耦分离，使两部分可以独立变化。
+桥接模式最主要的特点即是将实现层（如元素绑定的事件）与抽象层（如修饰页面 UI 逻辑）解耦分离，使两部分可以独立变化。
 
-#### 问题：创建一个对象桥接method，实现为对象拓展方法的功能。
+#### 问题: 创建一个对象桥接 method，实现为对象拓展方法的功能
 
 ### 组合模式
 
-组合模式（Composite）：又称部分-整体模式，将对象组合成树形结构以表示“部分整体”的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性。
+组合模式（Composite）: 又称部分-整体模式，将对象组合成树形结构以表示“部分整体”的层次结构。组合模式使得用户对单个对象和组合对象的使用具有一致性。
+
+形成一个新闻虚拟父类 News
+
+```js
+{
+  // 祖先
+  var News = function () {
+    //子组件容器
+    this.children = [] //当前组件元素
+    this.element = null
+  }
+  News.prototype = {
+    init: function () {
+      throw new Error('请重写你的方法')
+    },
+    add: function () {
+      throw new Error('请重写你的方法')
+    },
+    getElement: function () {
+      throw new Error('请重写你的方法')
+    }
+  } // 容器类构造函数
+
+  var container = function (id, parent) {
+    // 构造函数继承父类
+    News.call(this) // 模块id
+    this.id = id // 模块的父容器
+    this.parent = parent // 构建方法
+    this.init()
+  } // 寄生式继承父类原型方法
+  inheritPrototype(container, News) // 构建方法
+  container.prototype.init = function () {
+    this.element = document.createElement('ul')
+    this.element.id = this.id
+    this.element.className = 'new-container'
+  } // 添加子元素方法
+  container.prototype.add = function (child) {
+    //在子元素容器中插入子元素
+    this.children.push(child) //插入当前组件元素树中
+    this.element.appendChild(child.getElement())
+    return this
+  } // 获取当前元素方法
+  container.prototype.getElement = function () {
+    return this.element
+  } // 显示方法
+  container.prototype.show = function () {
+    this.parent.appendChild(this.element)
+  }
+
+  var Item = function (classname) {
+    News.call(this)
+    this.classname = classname || ''
+    this.init()
+  }
+  inheritPrototype(Item, News)
+  Item.prototype.init = function () {
+    this.element = document.createElement('li')
+    this.element.className = this.classname
+  }
+  Item.prototype.add = function (child) {
+    //在子元素容器中插入子元素
+    this.children.push(child) //插入当前组件元素树中
+    this.element.appendChild(child.getElement())
+    return this
+  }
+  Item.prototype.getElement = function () {
+    return this.element
+  }
+  var NewsGroup = function (classname) {
+    News.call(this)
+    this.classname = classname || ''
+    this.init()
+  }
+  inheritPrototype(NewsGroup, News)
+  NewsGroup.prototype.init = function () {
+    this.element = document.createElement('div')
+    this.element.className = this.classname
+  }
+  NewsGroup.prototype.add = function (child) {
+    //在子元素容器中插入子元素
+    this.children.push(child) //插入当前组件元素树中
+    this.element.appendChild(child.getElement())
+    return this
+  }
+  NewsGroup.prototype.getElement = function () {
+    return this.element
+  }
+}
+```
+
+创建一个新闻类
+
+```js
+{
+  var ImageNews = function (url, href, classname) {
+    News.call(this)
+    this.url = url || ''
+    this.href = href || '#'
+    this.classname = classname || 'normal'
+    this.init()
+  }
+  inheritPrototype(ImageNews, News)
+  ImageNews.prototype.init = function () {
+    this.element = document.createElement('a')
+    var img = new Image()
+    img.src = this.url
+    this.element.appendChild(img)
+    this.element.className = 'image-news ' + this.classname
+    this.element.href = this.href
+  }
+  ImageNews.prototype.add = function () {}
+  ImageNews.prototype.getElement = function () {
+    return this.element
+  }
+
+  var IconNews = function (text, href, type) {
+    News.call(this)
+    this.text = text || ''
+    this.href = href || '#'
+    this.type = type || 'video'
+    this.init()
+  }
+  inheritPrototype(IconNews, News)
+  IconNews.prototype.init = function () {
+    this.element = document.createElement('a')
+    this.element.innerHTML = this.text
+    this.element.href = this.href
+    this.element.className = 'icon ' + this.type
+  }
+  IconNews.prototype.add = function () {}
+  IconNews.prototype.getElement = function () {
+    return this.element
+  }
+  var EasyNews = function (text, href) {
+    News.call(this)
+    this.text = text || ''
+    this.href = href || '#'
+    this.init()
+  }
+  inheritPrototype(EasyNews, News)
+  EasyNews.prototype.init = function () {
+    this.element = document.createElement('a')
+    this.element.innerHTML = this.text
+    this.element.href = this.href
+    this.element.className = 'text'
+  }
+  EasyNews.prototype.add = function () {}
+  EasyNews.prototype.getElement = function () {
+    return this.element
+  }
+  var TypeNews = function (text, href, type, pos) {
+    News.call(this)
+    this.text = text || ''
+    this.href = href || '#'
+    this.type = type || ''
+    this.pos = pos || 'left'
+    this.init()
+  }
+  inheritPrototype(TypeNews, News)
+  TypeNews.prototype.init = function () {
+    this.element = document.createElement('a')
+    if (this.pos === 'left') {
+      this.element.innerHTML = '[' + this.type + '] ' + this.text
+    } else {
+      this.element.innerHTML = this.text + ' [' + this.type + ']'
+    }
+    this.element.href = this.href
+    this.element.className = 'text'
+  }
+  TypeNews.prototype.add = function () {}
+  TypeNews.prototype.getElement = function () {
+    return this.element
+  }
+}
+```
+
+创建新闻模块
+
+```js
+{
+  var news1 = new container('news', document.body)
+  news1
+    .add(new Item('normal').add(new IconNews('梅西不拿金球也伟大', '#', 'video')))
+    .add(new Item('normal').add(new IconNews('保护强国强队用意明显', '#', 'live')))
+    .add(
+      new Item('normal').add(
+        new NewsGroup('has-img')
+          .add(
+            new ImageNews(
+              'https://t8.baidu.com/it/u=1982207704,3412568354&fm=74&app=80&size=f256,256&n=0&f=JPEG&fmt=auto?sec=1654707600&t=d31d644ebfbc814bd10f9984554b7632',
+              '#',
+              'small'
+            )
+          )
+          .add(new EasyNews('从240斤胖子成功变型男', '#'))
+          .add(new EasyNews('五大雷人跑步机', '#'))
+      )
+    )
+    .add(new Item('normal').add(new TypeNews('AK47不愿为费城打球', '#', 'NBA', 'left')))
+    .add(new Item('normal').add(new TypeNews('火炮飈6三分创新高', '#', 'cBA', 'right')))
+    .show()
+}
+```
+
+创建表单
+
+```js
+{
+  var form = new FormItem('FormItem', document.body)
+  form
+    .add(
+      new FieldsetItem('account', '账号')
+        .add(
+          new Group()
+            .add(new LabelItem('user_name', '用户名: '))
+            .add(new InputItem('user_name'))
+            .add(new spanItem('4到6位数字或字母'))
+        )
+        .add(
+          new Group()
+            .add(new LabelItem('user_password', '密&emsp;码: '))
+            .add(new InputItem('user_password'))
+            .add(new spanItem('6到12位数字或者密码'))
+        )
+    )
+    .add //……
+    ()
+    .show()
+}
+```
+
+### 享元模式
+
+享元模式（Flyweight）: 运用共享技术有效地支持大量的细粒度的对象，避免对象间拥有相同内容造成多余的开销。
+
+```js
+{
+  // 享元对象
+  var Flyweight = (function () {
+    // 己创建的元素
+    var created = [] // 创建—个新闻包装容器
+    function create() {
+      var dom = document.createElement('div') // 将容器插入新闻列表容器中
+      document.getElementById('container').appendChild(dom) // 缓存新创建的元素
+      created.push(dom) // 返回创建的新元素
+      return dom
+    }
+    return {
+      // 获取创建新闻元素方法
+      getDiv: function () {
+        // 如果己创建的元素小于当前页元素总个数，则创建
+        if (created.length < 5) {
+          return create()
+        } else {
+          // 获取第—个元素，并插入最后面
+          var div = created.shift()
+          created.push(div)
+          return div
+        }
+      }
+    }
+  })()
+
+  // 下—页按钮绑定事件
+  document.getElementById('next_page').onclick = function () {
+    // 如果新闻内容不足5条则返回
+    if (article.length < 5) return
+    var n = (++paper * num) / len, // 获取当前页的第—条新闻索引
+      j = 0 // 循环变量 // 插入5条新闻
+    for (; j < 5; j++) {
+      // 如果存在第 n + j 条则插入
+      if (article[n + j]) {
+        Flyweight.getDiv().innerHTML = article[n + j] // 否则插入起始位置第 n + j - len 条
+      } else if (article[n + j - len]) {
+        Flyweight.getDiv().innerHTML = article[n + j - len] // 如果都不存在则插入空字符串
+      } else {
+        Flyweight.getDiv().innerHTML = ''
+      }
+    }
+  }
+}
+```
+
+#### 问题: 工作中享元模式应用比较多，那么你能否创建几类弹框，然后分析它们中哪些数据结构与方法比较类似？你能否提取出来作为享元对象来优化你的功能？
+
+## 行为型设计模式
+
+行为型设计模式用于不同对象之间职责划分或算法抽象，行为型设计模式不仅仅涉及类和对象，还涉及类或对象之间的交流模式并加以实现。
+
+### 照猫画虎 - 模板方法模式
+
+模板方法模式（Template Method）: 父类中定义一组操作算法骨架，而将一些实现步骤延迟到子类中，使得子类可以不改变父类的算法结构的同时可重新定义算法中某些实现步骤。
+
+```js
+{
+  // 模板类 基础提示框 data 渲染数据
+  var Alert = function (data) {
+    // 设有数据则返回，防止后面程序执行
+    if (!data) return
+    // 设置内容
+    this.content = data.content
+    // 创建提示框面板
+    this.panel = document.createElement('div')
+    // 创建提示内容组件
+    this.contentNode = document.createElement('p')
+    // 创建确定按钮组件
+    this.confirmBtn = document.createElement('span')
+    // 创建关闭按钮组件
+    this.closeBtn = document.createElement('b')
+    // 为提示框面板添加类
+    this.panel.className = 'alert'
+    // 为关闭按钮添加类
+    this.closeBtn.className = 'a-close'
+    // 为确定按钮添加类
+    this.confirmBtn.className = 'a-confirm'
+    // 为确定按钮添加文案
+    this.confirmBtn.innerHTML = data.confirm || '确认'
+    // 为提示内容添加文本
+    this.contentNode.innerHTML = this.content
+    // 点击确定按钮执行方法 如果data中有success方法则为success方法，否则为空函数
+    this.success = data.success || function () {}
+    // 点击关闭按钮执行方法
+    this.fail = data.fail || function () {}
+  }
+
+  // 提示框原型方法
+  Alert.prototype = {
+    // 创建方法
+    init: function () {
+      // 生成提示框
+      this.panel.appendChild(this.closeBtn)
+      this.panel.appendChild(this.contentNode)
+      this.panel.appendChild(this.confirmBtn)
+      // 插入页面中
+      document.body.appendChild(this.panel)
+      // 绑定事件
+      this.bindEvent()
+      // 显示提示框
+      this.show()
+    },
+    bindEvent: function () {
+      var me = this
+      // 关闭按钮点击事件
+      this.closeBtn.onclick = function () {
+        // 执行关闭取消方法
+        me.fail()
+        // 隐藏弹层
+        me.hide()
+      }
+      // 确定按钮点击事件
+      this.confirmBtn.onclick = function () {
+        // 执行关闭确认方法
+        me.success()
+        // 隐藏弹层
+        me.hide()
+      }
+    },
+    // 隐藏弹层方法
+    hide: function () {
+      this.panel.style.display = 'none'
+    },
+    // 显示弹层方法
+    show: function () {
+      this.panel.style.display = 'block'
+    }
+  }
+
+  // 右侧按钮提示框
+  var RightAlert = function (data) {
+    // 继承基本提示框构造函数
+    Alert.call(this, data)
+    // 为确认按钮添加right类设置位置居右
+    this.confirmBtn.className = this.confirmBtn.className + ' right'
+  }
+  // 继承基本提示框方法
+  RightAlert.prototype = new Alert()
+
+  // 标题提示框
+  var TitleAlert = function (data) {
+    // 继承基本提示框构造函数
+    Alert.call(this, data)
+    // 设置标题内容
+    this.title = data.title
+    // 创建标题组件
+    this.titleNode = document.createElement('h3')
+    // 标题组件中写入标题内容
+    this.titleNode.innerHTML = this.title
+  }
+  // 继承基本提示框方法
+  TitleAlert.prototype = new Alert()
+  // 对基本提示框创建方法拓展
+  TitleAlert.prototype.init = function () {
+    // 插入标题
+    this.panel.insertBefore(this.titleNode, this.panel.firstchild)
+    // 继承基本提示框init方法
+    Alert.prototype.init.call(this)
+  }
+
+  // 带有取消按钮的弹出框
+  var cancelAlert = function (data) {
+    // 继承标题提示框构造函数
+    TitleAlert.call(this, data)
+    // 取消按钮文案
+    this.cancel = data.cancel
+    // 创建取消按钮
+    this.cancelBtn = document.createElement('span')
+    // 为取消按钮添加类
+    this.cancelBtn.className = 'cancel'
+    // 设置取消按钮内容
+    this.cancelBtn.innerHTML = this.cancel || '取消'
+  }
+  // 继承标题提示框原型方法
+  cancelAlert.prototype = new Alert()
+  cancelAlert.prototype.init = function () {
+    // 继承标题提示框创建方法
+    TitleAlert.prototype.init.call(this)
+    // 由于取消按钮要添加在末尾，所以在创建完其他组件后添加
+    this.panel.appendChild(this.cancelBtn)
+  }
+  cancelAlert.prototype.bindEvent = function () {
+    var me = this
+    // 标题提示框绑定事件方法继承
+    TitleAlert.prototype.bindEvent.call(me)
+    // 取消按钮绑定事件
+    this.cancelBtn.onclick = function () {
+      // 执行取消回调函数
+      me.fail()
+      // 隐藏弹层
+      me.hide()
+    }
+  }
+
+  new cancelAlert({
+    title: '提示标题',
+    content: '提示内容',
+    success: function () {
+      console.log('ok')
+    },
+    fail: function () {
+      console.log('cancel')
+    }
+  }).init()
+}
+```
+
+#### 问题: 根据文中的案例，如果让你实现右侧取消按钮提示框，想一想，该怎么实现？
+
+### 通信卫星——观察者模式
+
+观察者模式（Observer）: 又被称作发布-订阅者模式或消息机制，定义了一种依赖关系，解决了主体对象与观察者之间功能的耦合。
+
+```js
+{
+  // 将观察者放在闭包中，当页面加载就立即执行
+  var observer = (function () {
+    // 防止消息队列暴漏而被篡改故将消息容器作为静态私有变量保存
+    var __messages = {}
+    return {
+      // 注册信息接口
+      regist: function (type, fn) {
+        // 如果此消息不存在则应该创建—个该消息类型
+        if (typeof __messages[type] === 'undefined') {
+          // 将动作推入到该消息对应的动作执行队列中
+          __messages[type] = [fn] // 如果此消息存在
+        } else {
+          // 将动作方法推入该消息对应的动作执行序列中
+          __messages[type].push(fn)
+        }
+      },
+      // 发布信息接口
+      fire: function (type, args) {
+        // 如果该消息设有被注册，则返回
+        if (!__messages[type]) return // 定义消息信息
+        var events = {
+            type: type, // 消息类型
+            args: args || {} // 消息携带数据
+          },
+          i = 0, // 消息动作循环变量
+          len = __messages[type].length // 消息动作长度
+        // 遍历消息动作
+        for (; i < len; i++) {
+          // 依次执行注册的消息对应的动作序列
+          __messages[type][i].call(this, events)
+        }
+      },
+      // 移除信息接口
+      remove: function (type, fn) {
+        // 如果消息动作队列存在
+        if (__messages[type] instanceof Array) {
+          // 从最后—个消息动作遍历
+          var i = __messages[type].length - 1
+          for (; i >= 0; i--) {
+            // 如果存在该动作则在消息动作序列中移除相应动作
+            __messages[type][i] === fn && __messages[type].splice(i, 1)
+          }
+        }
+      }
+    }
+  })()
+
+  var a = function(e){
+　 console.log(e.type, e.args.msg);
+　};
+  observer.regist('test', a);
+　observer.fire('test', {msg: '传递参数'});　// test 传递参数
+  observer.remove('test', a);
+　observer.fire('test', {msg: '传递参数'});　// undefined
+
+}
+```
