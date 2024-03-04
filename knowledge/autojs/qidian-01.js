@@ -2,6 +2,7 @@
 const autoThread = {
   init() {
     auto.waitFor()
+    console.show()
     console.setTitle('版本5.2.7')
     console.setPosition(0, device.height / 1.6)
     console.setSize(device.width / 2, device.width / 2)

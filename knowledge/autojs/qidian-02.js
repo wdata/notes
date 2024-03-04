@@ -1,10 +1,20 @@
 // 初始化
 console.show()
+console.setTitle('版本0.1')
+console.setPosition(0, device.height / 1.6)
+console.setSize(device.width / 2, device.width / 2)
 auto.waitFor()
 
 const regex_ad = /观看视频(\d+)秒后，可获得奖励/
 const regex_game = /(\d+)\/(\d+)分钟/
 let textView
+
+sleep(1000)
+//  判断是否开启服务
+if (auto.service === null) {
+  close('请先开启无障碍服务！')
+}
+log('无障碍服务已开启')
 
 // 启动起点
 app.launchPackage('com.qidian.QDReader')
@@ -13,11 +23,12 @@ waitForActivity('com.qidian.QDReader.ui.activity.MainGroupActivity')
 waitView('书架').click()
 log('应用已识别')
 
+/**
 // #region 签到
 log('签到 开始')
 while (textContains('登录领奖').exists()) {
-  log('  等待登录状态...')
-  sleep(500)
+  log('等待登录状态...')
+  sleep(100)
 }
 if ((textView = findView('签到'))) {
   clickButton(textView)
@@ -67,8 +78,10 @@ while ((textView = findView('领奖励'))) {
   }
 }
 log('领奖励 结束')
+**/
 
 // #region 玩游戏
+/**
 log('玩游戏 开始')
 if ((textView = findView('当日玩游戏10分钟'))) {
   let layout = textView.parent()
@@ -108,8 +121,10 @@ if ((textView = findView('当日玩游戏10分钟'))) {
 }
 sleep(1000)
 log('玩游戏 结束')
+ */
 // #endregion
 
+/**
 // 领奖励
 log('领奖励 开始')
 while ((textView = findView('领奖励'))) {
@@ -126,10 +141,98 @@ log('返回书架')
 back()
 waitForActivity('com.qidian.QDReader.ui.activity.MainGroupActivity')
 clickButton(waitView('书架'))
+ */
 
-log('运行结束')
-sleep(5000)
-console.hide()
+// 领取碎片红包
+
+// log(findViewBy('android.view.ViewGroup', 'name').find().length);
+// log(findViewBy('cv_content', 'id').find().length);
+log(findView('去找书'));
+log(findView('qd_recycler_view', 'id').scrollable());
+findView('qd_recycler_view', 'id').scrollForward()
+log(findView('去找书'));
+findView('qd_recycler_view', 'id').scrollForward()
+log(findView('去找书'));
+
+
+
+// 书架滚动
+function bookshelf() {
+    const list = findView('qd_recycler_view', 'id');
+    // 判断是否存在书架
+    if (!list) {
+        return false;
+    }
+
+
+    // 判断书架是否在顶部
+    while (
+        (findView('签到福利') && findView('书架')) ||
+        (findView('签到福利'))
+    ) {
+
+    }
+
+    do {
+
+    }
+    while (findView('去找书'))
+}
+
+// if ((textView = findView('qd_recycler_view', 'id'))) {
+//     // 查找列表图层
+//     const list = textView.children();
+//     for (let x = 0; x < list.length; x++) {
+//         // 子集遍历，查询
+//         const child = list[x];
+//         // 听书跳过
+//         if (child.findOne(findViewBy('flPlayViewBottom', 'id'))) {
+//             log("听书");
+//             // continue;
+//         }
+
+//         // // com.qidian.QDReader:id/cv_content
+//         // // com.qidian.QDReader:id/bookNameLayout
+
+//         // if (child.findOne(findViewBy('\\d+本', 'match'))) {
+//         //     log('书架')
+//         //     clickButton(child); // 进入书架
+
+//         //     // 书架内容
+//         //     if ((textView = findView('qd_recycler_view', 'id'))) {
+//         //         const list = textView.children();
+//         //         for (let x = 0; x < list.length; x++) {
+//         //             // 子集遍历，查询
+//         //             const child = list[x];
+//         //             log('书')
+//         //             clickButton(child.findOne(findViewBy('ivMore', 'id'))); // 点击其他
+//         //             if (redEnvelope()) {
+//         //                 return;
+//         //             }
+//         //         }
+//         //     }
+//         // } else {
+//         //     log('书')
+//         //     clickButton(child.findOne(findViewBy('ivMore', 'id'))); // 点击其他
+//         //     if (redEnvelope()) {
+//         //         return;
+//         //     }
+//         // }
+//     }
+// }
+
+// 执行红包视频
+function redEnvelope() {
+    clickButton(waitView('红包'));
+    if ((textView = waitView('马上抢'))) {
+        clickButton(textView);
+        watchAds();
+    } else {
+        return true;
+    }
+}
+
+close()
 
 /**
  * 根据正则表达式查找字符串中的值
@@ -181,6 +284,8 @@ function findViewBy(content, mode) {
     find = textMatches(content)
   } else if (mode === 'id') {
     find = id(content)
+  } else if (mode === 'name') {
+    find = className(content)
   } else {
     find = text(content)
   }
@@ -214,10 +319,12 @@ function clickButton(view) {
 function watchAds() {
   className('ImageView').waitFor()
   id('android:id/navigationBarBackground').waitFor()
-  sleep(5000)
+//   sleep(5000)
   if ((textView = findView('观看视频\\d+秒后，可获得奖励', 'match'))) {
+    log('进入-----------------')
     let adTime = findValueFromString(textView.text(), regex_ad)
     // 应该不会有比 45s 更长的广告了吧
+    log(adTime)
     adTime = adTime ? adTime[1] : 45
     log(`广告时间：${adTime}+1s`)
     sleep(adTime * 1000)
@@ -281,6 +388,29 @@ function logRootView(child) {
   }
   log(pl)
   logView(child)
+}
+
+
+/**
+ * 执行循环
+ * @param {Array} children 子视图列表
+ * @param {function} fun 执行的函数
+ */
+function loop(children, fun) {
+    for (let x = 0; x < children.length; x++) {
+        fun(children[x]);
+    }
+}
+
+// 关闭服务
+function close(text) {
+  if (text) {
+    log(text)
+  }
+  log('运行结束')
+  sleep(3000)
+  console.hide()
+  engines.myEngine().forceStop()
 }
 
 // #endregion```
