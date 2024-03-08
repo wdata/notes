@@ -5,8 +5,6 @@ console.setPosition(0, device.height / 1.6)
 console.setSize(device.width / 2, device.width / 2)
 auto.waitFor()
 
-const regex_ad = /观看视频(\d+)秒后，可获得奖励/
-const regex_game = /(\d+)\/(\d+)分钟/
 let textView
 
 sleep(1000)
@@ -20,10 +18,10 @@ log('无障碍服务已开启')
 app.launchPackage('com.qidian.QDReader')
 waitForPackage('com.qidian.QDReader')
 waitForActivity('com.qidian.QDReader.ui.activity.MainGroupActivity')
-waitView('书架').click()
+clickButton(waitView('书架'))
 log('应用已识别')
 
-/**
+/*
 // #region 签到
 log('签到 开始')
 while (textContains('登录领奖').exists()) {
@@ -39,7 +37,7 @@ log('签到 结束')
 // #endregion
 
 // 我 - 福利中心
-clickButton(findView('我'))
+clickButton(waitView('我'))
 clickButton(waitView('福利中心'))
 waitForActivity('com.qidian.QDReader.ui.activity.QDBrowserActivity')
 waitView('限时彩蛋')
@@ -58,6 +56,7 @@ while (
 log('每日福利 结束')
 // #endregion
 
+sleep(1000)
 // #region 限时彩蛋
 log('限时彩蛋 开始')
 while ((textView = findView('看视频'))) {
@@ -78,7 +77,8 @@ while ((textView = findView('领奖励'))) {
   }
 }
 log('领奖励 结束')
-**/
+
+*/
 
 // #region 玩游戏
 /**
@@ -124,7 +124,7 @@ log('玩游戏 结束')
  */
 // #endregion
 
-/**
+/*
 // 领奖励
 log('领奖励 开始')
 while ((textView = findView('领奖励'))) {
@@ -139,97 +139,118 @@ log('领奖励 结束')
 // 结束
 log('返回书架')
 back()
+sleep(500)
 waitForActivity('com.qidian.QDReader.ui.activity.MainGroupActivity')
-clickButton(waitView('书架'))
- */
+// clickButton(findView('书架'))
+back()
 
+*/
 // 领取碎片红包
-
-// log(findViewBy('android.view.ViewGroup', 'name').find().length);
-// log(findViewBy('cv_content', 'id').find().length);
-log(findView('去找书'));
-log(findView('qd_recycler_view', 'id').scrollable());
-findView('qd_recycler_view', 'id').scrollForward()
-log(findView('去找书'));
-findView('qd_recycler_view', 'id').scrollForward()
-log(findView('去找书'));
-
-
-
 // 书架滚动
-function bookshelf() {
-    const list = findView('qd_recycler_view', 'id');
-    // 判断是否存在书架
-    if (!list) {
-        return false;
-    }
+function bookshelf(callback) {
+  let bookshelf = findView('qd_recycler_view', 'id')
+  // 判断是否存在书架
+  if (!bookshelf) {
+    return false
+  }
 
+  // 将滚动拉到书架顶部
+  while (bookshelf.scrollBackward()) {
+    log('返回滚动条顶部')
+    sleep(500)
+  }
 
-    // 判断书架是否在顶部
-    while (
-        (findView('签到福利') && findView('书架')) ||
-        (findView('签到福利'))
-    ) {
+  // 循环点击和遍历，直至最底部
+  let texts = [] // 记录不重复
+  do {
+    bookshelf = findView('qd_recycler_view', 'id')
+    bookshelf.children().forEach((child) => {
+      const text = child.findOne(findViewBy('tvBookName', 'id'))
+      // 重复跳过
+      if (text && text !== '去找书' && !texts.includes(text) && bookIndexMax !== 0) {
+        text && log(text.text())
+        texts.push(text)
+        callback(child)
+      }
+    })
+    bookshelf.scrollForward()
+  } while (!findView('去找书') && findView('qd_recycler_view', 'id') && bookIndexMax !== 0)
 
-    }
-
-    do {
-
-    }
-    while (findView('去找书'))
+  // 将滚动拉到书架顶部
+  while (bookshelf.scrollBackward()) {
+    log('返回滚动条顶部')
+    sleep(500)
+  }
 }
 
-// if ((textView = findView('qd_recycler_view', 'id'))) {
-//     // 查找列表图层
-//     const list = textView.children();
-//     for (let x = 0; x < list.length; x++) {
-//         // 子集遍历，查询
-//         const child = list[x];
-//         // 听书跳过
-//         if (child.findOne(findViewBy('flPlayViewBottom', 'id'))) {
-//             log("听书");
-//             // continue;
-//         }
+// 书架
+let bookIndexListMax = true
+let bookIndexMax = 10
+bookshelf((child) => {
+  if (child.findOne(findViewBy('\\d+本', 'match'))) {
+    log('书架')
+    clickButton(child) // 进入书架
+    waitView('管理') // 延迟
+    bookshelf((childData) => {
+      redEnvelope(childData)
+    })
+    back()
+  } else {
+    redEnvelope(child)
+  }
+})
 
-//         // // com.qidian.QDReader:id/cv_content
-//         // // com.qidian.QDReader:id/bookNameLayout
+// 书籍判断
+function redEnvelope(child) {
+  // 听书跳过
+  if (child.findOne(findViewBy('bookCoverLayout', 'id'))) {
+    log('听书')
+    return
+  }
+  log('书')
+  // // 点击其他
+  // clickButton(child.findOne(findViewBy('ivMore', 'id')))
+  // // 点击红包
+  // clickButton(waitView('红包'))
+  // sleep(500)
+  // // 进入红包视频
+  // if (findView('马上抢') && bookIndexListMax) {
+  //     clickButton(findView('马上抢'));
+  //     watchAds();
+  //     clickButton(waitView('立即领取'));
+  //     // clickButton(waitView('放弃奖励'));
+  //     findView('我知道了') && clickButton(waitView('立即领取'));
+  //     clickButton(waitView('topLayout', 'id')); // 关闭弹窗
+  //     bookIndexMax--;
+  // } else {
+  //     clickButton(waitView('topLayout', 'id')); // 关闭弹窗
+  //     bookIndexMax--;
+  //     bookIndexListMax = false;
+  // }
 
-//         // if (child.findOne(findViewBy('\\d+本', 'match'))) {
-//         //     log('书架')
-//         //     clickButton(child); // 进入书架
-
-//         //     // 书架内容
-//         //     if ((textView = findView('qd_recycler_view', 'id'))) {
-//         //         const list = textView.children();
-//         //         for (let x = 0; x < list.length; x++) {
-//         //             // 子集遍历，查询
-//         //             const child = list[x];
-//         //             log('书')
-//         //             clickButton(child.findOne(findViewBy('ivMore', 'id'))); // 点击其他
-//         //             if (redEnvelope()) {
-//         //                 return;
-//         //             }
-//         //         }
-//         //     }
-//         // } else {
-//         //     log('书')
-//         //     clickButton(child.findOne(findViewBy('ivMore', 'id'))); // 点击其他
-//         //     if (redEnvelope()) {
-//         //         return;
-//         //     }
-//         // }
-//     }
-// }
-
-// 执行红包视频
-function redEnvelope() {
-    clickButton(waitView('红包'));
-    if ((textView = waitView('马上抢'))) {
-        clickButton(textView);
-        watchAds();
-    } else {
-        return true;
-    }
+  // 进入书内部
+  clickButton(child.findOne(findViewBy('tvBookName', 'id'))) // 进入书内
+  log('进入书籍')
+  // while (findView('打赏') && findView('红包')) {
+  //   VolumeDown()
+  //   sleep(500)
+  //   log('切换书页中')
+  // }
+  // log('书页切换完成')
+  // clickButton(findView('红包'))
+  // if (findView('马上抢') && bookIndexListMax) {
+  //   clickButton(findView('马上抢'))
+  //   watchAds()
+  //   clickButton(waitView('立即领取'))
+  //   // clickButton(waitView('放弃奖励'));
+  //   findView('我知道了') && clickButton(waitView('立即领取'))
+  //   clickButton(waitView('topLayout', 'id')) // 关闭弹窗
+  //   bookIndexMax--
+  // } else {
+  //   clickButton(waitView('topLayout', 'id')) // 关闭弹窗
+  //   bookIndexMax--
+  //   bookIndexListMax = false
+  // }
 }
 
 close()
@@ -317,12 +338,31 @@ function clickButton(view) {
  * @returns 是否播放完成
  */
 function watchAds() {
-  className('ImageView').waitFor()
-  id('android:id/navigationBarBackground').waitFor()
-//   sleep(5000)
-  if ((textView = findView('观看视频\\d+秒后，可获得奖励', 'match'))) {
+  const regex_ad = /观看视频(\d+)秒后，可获得奖励/
+  const regex_game = /(\d+)\/(\d+)分钟/
+  log('等待视频加载')
+  do {
+    sleep(100)
+    if (textContains('观看视频').exists() || textContains('观看完视频').exists()) {
+      break
+    }
+  } while (!(textContains('观看视频').exists() || textContains('观看完视频').exists()))
+
+  log('进入观看视频2')
+  if ((textView = findView('观看\\d+秒领取奖励', 'match'))) {
     log('进入-----------------')
-    let adTime = findValueFromString(textView.text(), regex_ad)
+    log(textView.text())
+    let adTime = findValueFromString(textView.text(), /观看视频(\d+)秒领取奖励/)
+    // 应该不会有比 45s 更长的广告了吧
+    log(adTime)
+    adTime = adTime ? adTime[1] : 45
+    log(`广告时间：${adTime}+1s`)
+    sleep(adTime * 1000)
+    sleep(1000) // 额外休眠 1s
+  } else if ((textView = findView('观看视频\\d+秒后，可获得奖励', 'match'))) {
+    log('进入-----------------')
+    log(textView.text())
+    let adTime = findValueFromString(textView.text(), /观看视频(\d+)秒后，可获得奖励/)
     // 应该不会有比 45s 更长的广告了吧
     log(adTime)
     adTime = adTime ? adTime[1] : 45
@@ -390,16 +430,15 @@ function logRootView(child) {
   logView(child)
 }
 
-
 /**
  * 执行循环
  * @param {Array} children 子视图列表
  * @param {function} fun 执行的函数
  */
 function loop(children, fun) {
-    for (let x = 0; x < children.length; x++) {
-        fun(children[x]);
-    }
+  for (let x = 0; x < children.length; x++) {
+    fun(children[x])
+  }
 }
 
 // 关闭服务
