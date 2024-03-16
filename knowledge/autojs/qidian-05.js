@@ -21,7 +21,7 @@ clickButton(waitView('发现'))
 sleep(300);
 clickButton(waitView('红包广场'))
 
-while (!findView('抢红包')) {
+while (!findView('马上抢')) {
   back();
   log('返回发现');
   sleep(300);
@@ -30,8 +30,9 @@ while (!findView('抢红包')) {
   sleep(300);
 }
 
-clickButton(findView('抢红包'));
-clickButton(waitView('抢'));
+clickButton(findView('马上抢'));
+clickButton(waitView('抢红包', 'textContains')); // 投1月票抢红包
+device.vibrate(2000);
 
 close()
 
@@ -70,6 +71,8 @@ function findViewBy(content, mode) {
   let find
   if (mode === 'match') {
     find = textMatches(content)
+  } else if (mode === 'textContains') {
+    find = textContains(content)
   } else if (mode === 'id') {
     find = id(content)
   } else if (mode === 'name') {
